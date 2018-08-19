@@ -1,0 +1,32 @@
+  <div class="card">
+    <div class="card-header">
+      <h1>Gesprek aanmaken</h1>
+    </div>
+    <div class="card-block" *ngIf="nieuwGesprek">
+      <form [formGroup]="nieuwGesprek" (ngSubmit)="onSubmit()">
+        <div class="col-10 mt-3">
+          <label><b>Titel van gesprek:</b></label>
+          <input type="text" id="titel" class="form-control" formControlName="titel" placeholder="Titel van gesprek" style="font-size: 100%" />
+        </div>
+        <div class="col-10 mt-3" *ngIf="gezinsLedenExcl.length > 0">
+          <label><b>Personen uitnodigen aan gesprek:</b></label>
+          <div formArrayName="personen">
+            <div *ngFor='let persoon of personen.controls; let i = index'>
+              <input id="box{{i}}" type="checkbox" [formControl]="persoon" />
+              <label for="box{{i}}">{{gezinsLedenExcl[i]}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-5 mt-5">
+          <button type="submit" class="btn btn-success" [disabled]="!nieuwGesprek.valid">
+            <span class="glyphicon glyphicon-ok"></span>
+          </button>
+          <button type="button" class="btn btn-danger"
+                  (click)="gesprekAanmakenAnnuleren()">
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer"></div>
+  </div>

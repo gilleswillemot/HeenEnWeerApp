@@ -1,0 +1,8 @@
+#berichten {
+    height: 30em;
+    overflow-y: scroll;
+}
+
+.btn-success {
+  font-size: 100%
+}

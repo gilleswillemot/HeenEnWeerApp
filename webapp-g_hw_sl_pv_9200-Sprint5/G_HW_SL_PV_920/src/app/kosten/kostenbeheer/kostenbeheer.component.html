@@ -1,0 +1,116 @@
+<div class="kosten">
+  <div class="kostenLijst col-md-12 mt-5">
+    <div *ngIf="!nieuweKostBoolean && !wijzigKostBoolean">
+      <div class="row card-columns">
+        <div class="col-2 mt-5">
+          <div class="card mt-5">
+            <div class="card-header">
+              <h3><i class="fa fa-filter"></i> Categorie:</h3>
+            </div>
+            <div class="card-block mb-5">
+              <div class="row">
+                <div class="col-2" *ngFor="let categorie of categories">
+                  <button class="btn btn-primary categorieButton" (click)="filterOpCategorie(categorie)"><i class="{{categorie}} fa-fw"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-5">
+            <div class="card-header">
+              <h3><i class="fa fa-filter"></i> Persoon:</h3>
+            </div>
+            <div class="card-block">
+              <div class="col-11" style="font-size: 130%;" *ngFor='let persoon of allePersonenLijst; let i=index'>
+                <input id="box{{i}}" type="checkbox" (click)="filterOpPersonen(persoon)" />
+                <label for="box{{i}}">{{allePersonenLijst[i]}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class=" col-9">
+          <div class="card">
+            <div class="card-header">
+              <div class="row col-12">
+                <div class="col-6 text-center offset-3">
+                  <h1>Alle Kosten</h1>
+                </div>
+                <div class="col-3">
+                  <button class="float-right nieuweKostButton btn btn-primary" (click)="nieuweKostToevoegenClick()"><span class="glyphicon glyphicon-plus"></span> Nieuwe Kost</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-block">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th class="text-center">Naam</th>
+                    <th class="text-center">
+                      <button class="filterButton" (click)="filterOpDatum()">
+                        <b>Datum</b>
+                        <i *ngIf="!filteredOpDatum" class="fa fa-chevron-down"></i>
+                        <i *ngIf="filteredOpDatum" class="fa fa-chevron-up"></i>
+                      </button>
+                    </th>
+                    <th class="text-center">Gekocht door</th>
+                    <th class="text-center">Gekocht voor</th>
+                    <th class="text-center">
+                      <button class="filterButton" (click)="filterOpKost()">
+                        <b>
+                          Kostprijs<i *ngIf="!filteredOpKost" class="fa fa-chevron-down"></i>
+                          <i *ngIf="filteredOpKost" class="fa fa-chevron-up"></i>
+                        </b>
+                      </button>
+                    </th>
+                    <th class="text-center">Extra uitleg</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody class="kostItems">
+                  <tr *ngFor="let kost of filterLijst">
+                    <td><span class="{{kost.getCategorieAsIcon()}} lijstIcon"></span></td>
+                    <td>{{kost.naam}}</td>
+                    <td style="text-align: center">{{kost.datumToString()}}</td>
+                    <td style="text-align: center">{{kost.aanmakerKost}}</td>
+                    <td style="text-align: center">{{kost.getBetrokkenPersonenAlsString()}}</td>
+                    <td style="text-align: center">€{{kost.kost}}</td>
+                    <td style="font-size: 90%;">{{kost.beschrijving}}</td>
+                    <td>
+                      <button class="btn btn-primary lijstButton" (click)="wijzigKostClick(kost)"><span class="glyphicon glyphicon-pencil"></span></button>
+                    </td>
+                    <td>
+                      <button class="btn btn-danger lijstButton" (click)="kostId = kost.id"><span class="glyphicon glyphicon-remove"></span></button>
+                    </td>
+
+                  </tr>
+                  <div *ngIf="kostId">
+                    <app-alert
+                      [titel]="'Kost verwijderen'"
+                      [alertBoodschap]="'Bent u zeker dat u deze kost wil verwijderen?'"
+                      [welBoodschap]="'Kost verwijderen'"
+                      [nietBoodschap]="'Annuleer'"
+                      [isOpen]="openAlert"
+                      (actie)="removeKost($event)">
+                    </app-alert>
+                  </div>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<app-kosten-lijst (nieuweKostBoolean)="voegNieuweKostToe($event)" (editKostMetId)="editKost($event)"></app-kosten-lijst>-->
+    </div>
+    <div class="col-4 offset-4">
+      <div *ngIf="nieuweKostBoolean">
+        <app-kost-toevoegen (nieuweKost)="voegNieuweKostToe($event)" (annuleerKost)="annuleer()" [betrokkenPersonenLijst]="betrokkenPersonenLijst"></app-kost-toevoegen>
+      </div>
+      <div *ngIf="wijzigKostBoolean">
+        <app-kost-wijzigen (gewijzigdeKost)="wijzigKost($event)" [selectedKost]="selectedKost" (annuleerKost)="annuleer()" [betrokkenPersonenLijst]="betrokkenPersonenLijst"></app-kost-wijzigen>
+      </div>
+    </div>
+  </div>
+</div>
+
+

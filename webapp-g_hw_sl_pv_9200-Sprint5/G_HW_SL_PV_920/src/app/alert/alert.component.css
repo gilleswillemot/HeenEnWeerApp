@@ -1,0 +1,16 @@
+.red-modal .modal-content {
+  background-color: red;
+  color: white;
+}
+
+.red-modal .close {
+  color: white;
+}
+
+button {
+  font-size: 100%;
+}
+
+#kruisje {
+    font-size: 200%;
+}

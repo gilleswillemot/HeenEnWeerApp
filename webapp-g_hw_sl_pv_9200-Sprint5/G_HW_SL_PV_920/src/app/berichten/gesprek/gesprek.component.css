@@ -1,0 +1,17 @@
+#test {
+  padding: 1%;
+}
+
+#test2 {
+  padding-bottom: 0;
+}
+
+#berichten {
+  height: 30em;
+  overflow-y: scroll;
+  background-color: white;
+}
+
+button {
+  font-size: 100%;
+}

@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
+/*@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css");*/
+
+/*@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";*/
+@import "../node_modules/font-awesome/css/font-awesome.css";
+
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+/*@import url('../node_modules/angular-calendar/css/angular-calendar.css');*/
+/*html {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}*/
+/*@font-face {
+    font-family:"fontAwesome";
+  src: url('./assets/fonts/FontAwesome.otf') format("opentype");
+  src: url('assets/fonts/fontawesome-webfont.eot?#iefix') format('embedded-opentype'), 
+  url('assets/fonts/fontawesome-webfont.woff') format('woff'), 
+  url('assets/fonts/fontawesome-webfont.ttf') format('ttf'), 
+  url('assets/fonts/fontawesome-webfont.svg') format('svg'),
+    url('assets/fonts/fontawesome-webfont.woff2') format('woff2');
+
+}*/
+body {
+  background-image: url(assets/Dust-White-Seamless-pattern-for-website-background.jpg);
+  font-family: Ubuntu, sans-serif;
+  font-size: 150%;
+}
+

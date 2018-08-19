@@ -1,0 +1,77 @@
+<div class="col-6 offset-3 mt-5">
+  <div class="card">
+    <div class="card-header text-center">
+      <h1>Nieuw Account Aanmaken</h1>
+    </div>
+    <div class="card-block">
+      <form [formGroup]='user' (ngSubmit)='onSubmit()'>
+        <div class="form-group row mt-5">
+          <div class="col-3 offset-1">
+            <label class="float-right">Email:</label>
+          </div>
+          <div class="col-4">
+            <input class="form-control" type="text" formControlName='email'>
+            <div class='error' *ngIf=' user.get("email").errors?.required && user.get("email").touched'>
+              Uw email is verplicht.
+            </div>
+            <!--<div class='error' *ngIf='user.get("email").errors?.userAlreadyExists && user.get("email").touched'>
+              A user with that email already exists
+            </div>-->
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3 offset-1">
+            <label  class="float-right">Voornaam:</label>
+          </div>
+          <div class="col-4">
+            <input class="form-control" formControlName='voornaam'>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3 offset-1">
+            <label class="float-right">Familienaam:</label>
+          </div>
+          <div class="col-4">
+            <input class="form-control" formControlName='familienaam'>
+          </div>
+        </div>
+        <div class="form-group" formGroupName='passwordGroup'>
+          <div class="row">
+            <div class="col-3 offset-1">
+              <label class="float-right">Wachtwoord:</label>
+            </div>
+            <div class="col-4">
+              <input type="password" class="form-control" formControlName='password'>
+              <div class='error' *ngIf=' passwordControl.errors?.passwordTooShort && passwordControl.touched'>
+                Wachtwoord te kort, gelieve minstens {{passwordControl.errors?.passwordTooShort.requiredLength}} letters
+                te gebruiken (U heeft momenteel: {{passwordControl.errors?.passwordTooShort.actualLength}} letters)
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-3 offset-1">
+              <label  class="float-right">Bevestig wachtwoord:</label>
+            </div>
+            <div class="col-4">
+              <input type="password" class="form-control" formControlName='confirmPassword'>
+              <div class='error' *ngIf=' user.get("passwordGroup").errors?.passwordsDiffer && user.get("passwordGroup").get("confirmPassword").touched  && user.get("passwordGroup").get("password").touched'>
+                De 2 wachtwoorden moeten hetzelfde zijn.
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <div class="mt-5">
+          <button type='submit' [disabled]='!user.valid' class="btn btn-primary col-4 offset-4"><i class="fa fa-user-plus"></i>  Account aanmaken</button>
+        </div>
+      </form>
+      <div class="text-center col-4 offset-4 mt-3">
+        <p>Heb je al een account? klik <a class='' routerLink="/login">hier</a> om in te loggen.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

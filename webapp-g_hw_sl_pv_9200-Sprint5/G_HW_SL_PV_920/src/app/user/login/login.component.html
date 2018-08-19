@@ -1,0 +1,36 @@
+<div class="col-6 offset-3 mt-5">
+  <div class="card">
+    <div class="card-header text-center">
+      <h1>Inloggen</h1>
+    </div>
+    <div class="card-block mt-5">
+      <form [formGroup]='user' (ngSubmit)='onSubmit()' class="">
+        <div class="form-group row">
+          <div class="col-3 offset-1">
+            <label class="float-right">Email:</label>
+          </div>
+          <div class="col-4">
+            <input class="form-control" type="text" formControlName='email'>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-3 offset-1">
+            <label class="float-right">Wachtwoord:</label>
+          </div>
+          <div class="col-4">
+            <input class="form-control" type="password" formControlName='password'>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <button type='submit' [disabled]='!user.valid' class="btn btn-primary col-4 offset-4"><i class="fa fa-sign-in"></i> log in</button>
+        </div>
+        <div class="text-center mt-3" style="color: crimson; font-size: 90%;">
+          {{errorMsg}}
+        </div>
+      </form>
+      <div class="text-center col-4 offset-4 mt-3">
+        <p>Heb je geen account? klik <a routerLink="/registreren">hier</a> voor te registreren.</p>
+      </div>
+    </div>
+  </div>
+</div>

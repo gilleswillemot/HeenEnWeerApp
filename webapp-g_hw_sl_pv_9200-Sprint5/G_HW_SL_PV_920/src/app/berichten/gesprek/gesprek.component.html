@@ -1,0 +1,36 @@
+<div id="test" class="row list-group pt-4 pr-4 pl-4" id="berichten">
+  <div id="test2" class="d-flex" [ngClass]="{'justify-content-end':
+             rechtsWeergeven(bericht.auteursId)}"
+       style="margin-bottom: 1%;"
+       *ngFor="let bericht of huidigGesprek.berichten">
+    <a [style.background-color]="berichtKleur(bericht.auteursId)"
+       class="list-group-item flex-column  align-items-start col-4"
+       [ngStyle]="{'border-radius': rechtsWeergeven(bericht.auteursId) ? '0px 20px 30px 30px': '20px 0px 30px 30px'}">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1"><b>{{bericht.voornaam}}</b></h5>
+        <small>{{bericht.berichtOuderdom}}</small>
+      </div>
+      <p class="mb-1">{{bericht.inhoud}}</p>
+      <!--<small>verstuurd vanaf mijn iphone.</small>-->
+      <!--<app-activiteit-popover *ngIf="bericht.activiteitId !== undefined"
+                                  [activiteit]="geefActiviteit(bericht.activiteitId)"
+                                  id="activiteitInBericht">
+      </app-activiteit-popover>-->
+    </a>
+  </div>
+</div>
+<div class="col-4 offset-8">
+  <form [formGroup]="toeTeVoegenBericht" (ngSubmit)="onSubmit()">
+    <br />
+    <div class="form-group">
+      <label for="opgesteldBericht">
+        <h2><b>Bericht toevoegen</b></h2>
+      </label>
+      <textarea formControlName="berichtInhoud" rows="6" cols="10" class="form-control"
+                id="exampleTextarea" style="font-size: 100%;"></textarea>
+      <button type="submit" class="btn btn-primary float-right mt-2">
+        <i class="glyphicon glyphicon-ok"></i> Verzend
+      </button>
+    </div>
+  </form>
+</div>

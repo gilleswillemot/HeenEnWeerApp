@@ -1,0 +1,24 @@
+<div id="activiteit">
+  <label for="toegevoegdActiviteit">Gelinkte activiteit aan dit bericht:</label>
+
+  <ng-template #popContent>
+    <h4>
+      <b> Startdatum:</b> {{activiteit.start.toLocaleDateString()}}
+    </h4>
+    <h4>
+      <b> Einddatum:</b> {{activiteit.end.toLocaleDateString()}}
+    </h4>
+    <h4>
+      <b>Omschrijving:</b> {{activiteit.title}}
+    </h4>
+  </ng-template>
+
+
+  <!--<app-activiteit-popover></app-activiteit-popover>-->
+  <a [routerLink]="['/kalender', activiteit.id]"
+     type="button" class="btn btn-outline-secondary"
+     [ngbPopover]="popContent"
+     id="toegevoegdActiviteit"
+     triggers="mouseenter:mouseleave"
+     popoverTitle="Activiteit">{{activiteit.title}}</a>
+</div> 

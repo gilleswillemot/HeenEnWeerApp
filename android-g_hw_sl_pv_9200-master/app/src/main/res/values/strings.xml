@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">" Two-Way "</string>
+    <string-array name="activiteiten_array">
+        <item>8u30 \t\t\t\t              Naar school brengen</item>
+        <item>16u  \t\t\t\t\t   Van school oppikken</item>
+        <item>17u30 \t\t  Voetbaltraining</item>
+        <item>18u  \t\t\t\t\t   Dansles</item>
+    </string-array>
+    <string name="title_activity_login">Sign in</string>
+    <string-array name="kindinfo_array">
+        <item>Naam</item>
+        <item>Verjaardag</item>
+        <item>Leeftijd</item>
+
+    </string-array>
+    <string-array name="act_tijden">
+        <item>8u30</item>
+        <item>16u</item>
+        <item>17u30</item>
+        <item>18u</item>
+    </string-array>
+    <string-array name="act_act">
+        <item>Naar school brengen</item>
+        <item>Van school oppikken</item>
+        <item>Voetbaltraining</item>
+        <item>Dansles</item>
+    </string-array>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Paswoord</string>
+    <string name="action_sign_in">Meld aan</string>
+    <string name="action_sign_in_short">Meld aan</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">Dit veld is verplicht</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="lege_beschrijving">Momenteel geen beschrijving weer te geven.</string>
+    <string name="geen_deelnemers">Momenteel nog geen deelnemers aan deze activiteit.</string>
+    <string name="title_activity_kost_toevoegen">KostToevoegen</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_menu">MenuActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_axtivity_info_kind">axtivity_infoKind</string>
+
+
+    <string name="hello_world">Hello world!</string>
+    <string name="email">Email</string>
+    <string name="passowrd">Paswoord</string>
+    <string name="login">INLOGGEN</string>
+    <string name="show_pwd">Toon Paswoord</string>
+    <string name="hide_pwd">Verberg Paswoord</string>
+    <string name="forgot">Paswoord vergeten?</string>
+    <string name="closebutton">Close Button for Activity</string>
+    <string name="newUser">Nog geen account? Registreer dan hier.</string>
+    <string name="fullName">Naam</string>
+    <string name="voornaam">Voornaam</string>
+    <string name="accountnaam">Accountnaam</string>
+    <string name="mobileNumber">Mobile Number</string>
+    <string name="location">Location</string>
+    <string name="confirmPassword">Bevestig Paswoord</string>
+    <string name="terms_conditions">Door op Registreren te klikken ga ik akkoord met de Algemene Voorwaarden.</string>
+    <string name="signUp">REGISTREER</string>
+    <string name="already_user">Heb je al een acoount? Log dan hier in.</string>
+    <string name="registered_emailid">Geef hieronder je geregistreerd Emailadres aub:</string>
+    <string name="submit">DIEN IN</string>
+    <string name="back">TERUG</string>
+    <string name="title_activity_tab_info_kind">activity_tabInfoKind</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_info_kind">InfoKind</string>
+    <string name="tab_text_1">Basis info</string>
+    <string name="tab_text_2">Hobbys</string>
+    <string name="tab_text_3">Activiteiten</string>
+    <string name="title_activity_kosten">KostenActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_messenger">MessengerActivity</string>
+    <string name="title_activity_maand_afrekening">MaandAfrekeningActivity</string>
+
+</resources>

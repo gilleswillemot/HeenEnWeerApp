@@ -1,0 +1,38 @@
+<div class="col-md-10 col-md-offset-1">
+<table class="table table-bordered table-hover">
+  <tbody>
+  <tr scope="row" *ngFor="let tijdspan of tijdspannes2; let i = index" 
+      >
+    <td class="tijdspan">{{tijdspan}}</td>
+    <td  [ngStyle]="{'border-bottom': huidigUurCheck(tijdspan)?'1px solid red':none}">
+        <button class="btn" [style.background-color]="act.color.primary"
+                 *ngFor="let act of tijdspannesArray[i]"
+                 (click)="activiteitBewerken(act)">
+            <!--{{act.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}}
+            ---> {{act.title}}
+        </button>
+<!--      attr.id="{{act.color.}}"-->
+    </td>
+  </tr>
+  </tbody>
+</table>
+</div>
+<!-- <div class="col-md-12" *ngFor="let tijdspan of tijdspannes2; let i = index">-->
+<!--    <p>{{tijdspan}}</p>-->
+<!--    <div class="col-md-12 col-md-offset-1" *ngFor="let act of tijdspannesArray[i]">-->
+<!--        <button  type="button" class="btn btn-primary btn-lg btn-block"-->
+<!--           (click)="activiteitBewerken(act)"-->
+<!--           attr.id="{{act.color.primary}}">-->
+<!--        <p >-->
+<!--          {{act.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}}-->
+<!--          - {{act.title}}, id: {{act.id}}, color: {{act.color.primary}}-->
+<!--        </p>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    <div *ngIf="!huidigUurCheck(tijdspannes2[i]); else elseBlock"><hr /></div>-->
+<!--    <ng-template #elseBlock><hr id="rode-lijn" /></ng-template>-->
+<!--    <br />-->
+<!--  </div>-->
+<!---->
+<!---->
+<!---->

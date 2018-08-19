@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-header">
+    <h2 class="ml-3">Kind Aanmaken</h2>
+  </div>
+  <div class="card-block">
+    <form [formGroup]="kind" (ngSubmit)="onSubmit()">
+      <div class="form-group row mt-5">
+        <div class="col-2">
+          <label class="float-right"><b>Voornaam:</b></label>
+        </div>
+        <div class="col-4">
+          <input class="form-control" formControlName="voornaam"/>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-2">
+          <label class="float-right"><b>Familienaam:</b></label>
+        </div>
+        <div class="col-4">
+          <input class="form-control" formControlName="familienaam" />
+        </div>
+      </div>
+      <div class="col-4 offset-2">
+      <color-picker id="colorpicker" [(ngModel)]="color" [availableColors]="availableColors" [pickerConfig]="pickerOptions"
+                    [ngModelOptions]="{standalone: true}">
+      </color-picker>
+      </div>
+      <div class="row mt-5">
+        <div class="col-2 offset-2">
+          <button type="submit" class="btn btn-success" ><i class="fa fa-check"></i> Maak aan</button>
+        </div>
+        <div class="col-2">
+          <button type="button" (click)="annuleer()" class="btn btn-danger float-right"><i class="fa fa-remove"></i> Annuleer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!--REMOVE {{kind.value | json}}-->

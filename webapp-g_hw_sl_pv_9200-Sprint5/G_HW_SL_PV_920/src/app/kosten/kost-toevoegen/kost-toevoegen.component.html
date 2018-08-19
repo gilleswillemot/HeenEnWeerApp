@@ -1,0 +1,116 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-3">
+        <button type="button" (click)="annuleer()" class="btn btn-primary" style="float: left">
+          <i class="fa fa-mail-reply"></i>
+        </button>
+      </div>
+      <div class="col-6 text-center">
+        <h2><b>Nieuwe Kost</b></h2>
+      </div>
+    </div>
+  </div>
+  <div class="card-block">
+    <form [formGroup]="kost" (ngSubmit)="onSubmit()">
+      <!--NAAM-->
+      <div class="form-group row mt-3">
+        <div class="col-4 labelDiv">
+          <label class="col-form-label"><span class="required">*</span><b>Naam:</b></label>
+        </div>
+        <div class="col-7">
+          <input type="text" class="form-control" formControlName="naam" />
+          <div *ngIf='kost.get( "naam" ).errors?.required && kost.get("naam").touched' class='ui pointing red basic label'>
+            Naam moet ingevuld zijn
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-4 labelDiv">
+          <label><span class="required">*</span>Kost:</label>
+        </div>
+        <div class="col-7">
+          <input type="text" class="form-control" formControlName="kost" />
+          <div *ngIf='kost.get("kost").errors?.required && kost.get("kost").touched' class='ui pointing red basic label'>
+            Kost Moet ingevuld zijn
+          </div>
+          <div *ngIf='kost.get("kost").errors?.pattern && kost.get("kost").touched' class='ui pointing red basic label'>
+            Dit is geen geldig getal.
+          </div>
+        </div>
+      </div>
+      <!--Categorie-->
+      <div class="form-group row">
+        <div class="col-4 labelDiv">
+          <label>Soort Kost:</label>
+        </div>
+        <div class="col-7">
+          <select class="form-control" formControlName="categorie">
+            <div></div>
+            <option *ngFor="let categorie of categories; let icon of icons"><div><i [ngClass]="icon"></i></div>{{categorie}}</option>
+          </select>
+          <!--<div ngbDropdown class="d-inline-block">
+            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Toggle dropdown</button>
+            <div ngbDropdownMenu class="" aria-labelledby="dropdownBasic1">
+              <button class="dropdown-item"><i class="fa fa-gift"></i>Action - 1</button>
+              <button class="dropdown-item">Another Action</button>
+              <button class="dropdown-item">Something else is here</button>
+            </div>
+          </div>-->
+        </div>
+      </div>
+      <!--BETROKKENPERSONEN-->
+      <div class="form-group row" formArrayName="betrokkenPersonen">
+        <div style="padding-left: 0%;" class="col-4 labelDiv">
+          <label>Gekocht Voor:</label>
+        </div>
+        <div class="col-7 customCheckbox">
+          <div>
+            <div *ngFor='let persoon of betrokkenPersonen.controls; let i=index'>
+              <input id="box{{i}}" type="checkbox" [formControl]="persoon" />
+              <label for="box{{i}}">{{betrokkenPersonenLijst[i]}}</label>
+              <!--<input type="checkbox" [formControl]="persoon"/>{{betrokkenPersonenLijst[i]}}-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--DATUM-->
+      <div class="form-group row">
+        <div class="col-4 labelDiv">
+          <label>Datum:</label>
+        </div>
+        <div class="col-md-8">
+          <mwl-demo-utils-date-time-picker [(ngModel)]="datum"
+                                           [ngModelOptions]="{standalone: true}"
+                                           (ngModelChange)="refresh.next()"
+                                           [timePicker]="false"
+                                           placeholder="Not set">
+          </mwl-demo-utils-date-time-picker>
+        </div>
+      </div>
+      <!--EXTRA UITLEG-->
+      <div class="form-group row">
+        <div class="col-4 labelDiv">
+          <label>Extra uitleg:</label>
+        </div>
+        <div class="col-7">
+          <textarea class="form-control" formControlName="beschrijving"></textarea>
+        </div>
+      </div>
+      <!--BUTTONS ONDERAAN-->
+      <div class="col-7 offset-4 mb-2" style="padding: 0%;">
+        <div *ngIf="!kost.valid">
+          <p style="font-size: 70%; color: red;">* moet ingevuld zijn</p>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!kost.valid">
+          <span class="glyphicon glyphicon-ok"></span> Voeg Toe
+        </button>
+        <button type="button" class="btn btn-danger" (click)="annuleer()" style="float: right;">
+          <span class="glyphicon glyphicon-remove"></span> Annuleer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!--REMOVE {{kost.value | json}}-->

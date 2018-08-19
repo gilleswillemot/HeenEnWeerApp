@@ -1,0 +1,36 @@
+<!--<mwl-calendar-week-view-header [days]="days"
+                               [locale]="'nl'"
+                               [customTemplate]="headerTemplate"
+                               (dayHeaderClicked)="dayHeaderClicked.emit($event)"
+                               (eventDropped)="eventTimesChanged.emit($event)">
+</mwl-calendar-week-view-header>-->
+
+<h3>{{maand}}</h3>
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th id="breedte0">#</th>
+        <th class="breedte" *ngFor="let dag of week">{{dag}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr scope="row" *ngFor="let uur of tijdspannes2; let i = index">
+        <th class="breedte1">{{uur}}</th>
+        <td class="breedte2" *ngFor="let dag of weekrooster">
+
+          <!--<ng-container></ng-container>-->
+          <!--<div *ngFor="let actArrayPerUur of dag.activiteiten[i]">-->
+            <button class="btn" [style.background-color]="act.color.primary"
+                    *ngFor="let act of dag.getActiviteiten(i)"
+                    (click)="activiteitOptiesWeergeven(act)"
+            >
+              <!--(eventClicked)="eventClicked.emit({event: $event.event})"-->
+                <!--(click)="activiteitOptiesWeergeven(act)"-->
+                {{act.title}}
+            </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

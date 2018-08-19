@@ -1,0 +1,81 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="src\app\calendar\**" />
+    <Compile Remove="src\app\kalender\services\**" />
+    <Compile Remove="src\app\kostenbeheer\**" />
+    <Compile Remove="src\app\routing\**" />
+    <Content Remove="src\app\calendar\**" />
+    <Content Remove="src\app\kalender\services\**" />
+    <Content Remove="src\app\kostenbeheer\**" />
+    <Content Remove="src\app\routing\**" />
+    <EmbeddedResource Remove="src\app\calendar\**" />
+    <EmbeddedResource Remove="src\app\kalender\services\**" />
+    <EmbeddedResource Remove="src\app\kostenbeheer\**" />
+    <EmbeddedResource Remove="src\app\routing\**" />
+    <None Remove="src\app\calendar\**" />
+    <None Remove="src\app\kalender\services\**" />
+    <None Remove="src\app\kostenbeheer\**" />
+    <None Remove="src\app\routing\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="src\app\berichten\bericht.model.ts" />
+    <None Remove="src\app\color-picker\color-picker-config.model.ts" />
+    <None Remove="src\app\color-picker\interfaces\color-picker-config.interface.ts" />
+    <None Remove="src\app\colors.ts" />
+    <None Remove="src\app\gebruiker.model.ts" />
+    <None Remove="src\app\gezin.model.ts" />
+    <None Remove="src\app\kalender\activiteit.model.ts" />
+    <None Remove="src\app\date-time-picker\calendar-header.component.ts" />
+    <None Remove="src\app\date-time-picker\date-time-picker.module.ts" />
+    <None Remove="src\app\kalender\kalender\ThirdPartycalendar-month-viewOverride.component.ts" />
+    <None Remove="src\app\kalender\week-view\dag.model.ts" />
+    <None Remove="src\app\kind.model.ts" />
+    <None Remove="src\app\TestActiviteiten.ts" />
+    <None Remove="src\app\testGesprekken.ts" />
+  </ItemGroup>
+
+
+    
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+  </ItemGroup>
+    
+  <ItemGroup>
+     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <TypeScriptCompile Include="src\app\berichten\bericht.model.ts" />
+    <TypeScriptCompile Include="src\app\color-picker\interfaces\color-picker-config.interface.ts" />
+    <TypeScriptCompile Include="src\app\color-picker\models\color-picker-config.model.ts" />
+    <TypeScriptCompile Include="src\app\colors.ts" />
+    <TypeScriptCompile Include="src\app\activiteit.model.ts" />
+    <TypeScriptCompile Include="src\app\date-time-picker\calendar-header.component.ts" />
+    <TypeScriptCompile Include="src\app\date-time-picker\date-time-picker.module.ts" />
+    <TypeScriptCompile Include="src\app\gebruiker - Copy.model.ts" />
+    <TypeScriptCompile Include="src\app\gebruiker.model.ts" />
+    <TypeScriptCompile Include="src\app\gezin.model.ts" />
+    <TypeScriptCompile Include="src\app\kalender\kalender\ThirdPartyCalendar-month-viewOverride.component.ts" />
+    <TypeScriptCompile Include="src\app\kalender\week-view\dag.model.ts" />
+    <TypeScriptCompile Include="src\app\kind.model.ts" />
+    <TypeScriptCompile Include="src\app\testActiviteiten.ts" />
+    <TypeScriptCompile Include="src\app\testGesprekken.ts" />
+    <TypeScriptCompile Include="src\app\testGezinsleden2.ts" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+{
+  "naam": "kalender1",
+  "kalenderWeergave": {
+    "maand": "januari",
+    "dagen": [
+      {
+        "naam": "dag1",
+        "activiteiten": [ "tandarts", "voetbal" ],
+        "personen": [ "piet", "tom" ]
+      },
+      {
+        "naam": "dag2",
+        "activiteiten": [ "qddds", "qsd" ],
+        "personen": [ "qsqqd", "qsdqd" ]
+      }
+    ]
+  }
+}

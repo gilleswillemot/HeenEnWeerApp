@@ -1,0 +1,102 @@
+.kostenLijst {
+  /*background-color: white;*/
+  background-size: 100%;
+  max-height: 46em;
+  overflow-y: scroll;
+}
+
+.filterLabel h3 {
+  font-size: 150%;
+}
+
+h1 {
+  font-size: 250%;
+  margin: 0%;
+}
+
+.lijstIcon {
+  font-size: 130%;
+}
+
+.filtersNaastLijst {
+  margin-top: 30%;
+}
+
+.lijstButton {
+  padding: 20% 25% 20% 25%;
+  font-size: 80%;
+}
+
+.categorieButton {
+  font-size: 110%;
+  border: solid 1px cornflowerblue;
+  border-radius: 3px;
+  margin-right: 1%;
+}
+
+.categorieButtons {
+  margin-right: 1%;
+}
+
+.filterButton {
+  border: none;
+  background-color: white;
+}
+
+.kostenLijst td {
+  font-size: 115%;
+}
+
+.kostenLijst th {
+  font-size: 150%;
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+  font-size: 250%;
+  opacity: 0.8;
+}
+
+td {
+  font-size: 110%;
+}
+
+th {
+  font-size: 130%;
+}
+
+.nieuweKostButton {
+  font-size: 130%;
+  border-radius: 10px;
+}
+
+
+input[type=checkbox] {
+  display: none;
+}
+  /* to hide the checkbox itself */
+  input[type=checkbox] + label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+  }
+
+  input[type=checkbox] + label:before {
+    content: "\f096";
+  }
+  /* unchecked icon */
+  input[type=checkbox] + label:before {
+    letter-spacing: 10px;
+  }
+  /* space between checkbox and label */
+
+  input[type=checkbox]:checked + label:before {
+    content: "\f046";
+  }
+  /* checked icon */
+  input[type=checkbox]:checked + label:before {
+    letter-spacing: 5px;
+  }
+/* allow space for check mark */
+
+

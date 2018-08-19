@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="text-center mt-5 col-3 ml-4">
+    <!--SIDEBAR 'Rubrieken', with article names list (click to open)-->
+    <ul class="list-group" *ngIf="selectedArticle">
+      <li class="list-group-item list-group-item-action" *ngFor="let article of articles" [ngClass]="{ 'active': selectedArticle === article }"
+        (click)="selectArticle(article)">
+        {{article.title}}
+      </li>
+    </ul>
+    <button type="button" class="mb-4 mt-4 btn btn-primary" *ngIf="isModerator" routerLink="/artikelAanmaken">
+      Voeg nieuw artikel toe
+    </button>
+  </div>
+
+  <h2 class="mt-5" *ngIf="noArticles">Er zijn nog geen artikelen toegevoegd aan het kenniscentrum.</h2>
+
+  <div *ngIf="selectedArticle" class="text-center mt-5 col-7">
+    <div class="card">
+      <!-- <img class="card-img-top" src="../../assets/mooning.png" alt="Card image cap"> -->
+      <div class="card-header">
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-5">
+            <h2 class="card-title text-capitalize">{{selectedArticle.title}}</h2>
+          </div>
+          <div class="col-2"></div>
+          <div *ngIf="isModerator" class="col-2">
+            <button class="btn btn-primary" (click)="deleteSelectedArticle()">
+              <span>
+                <i class="fa fa-trash fa-2x"></i>
+              </span>
+            </button>
+            <button class="btn btn-primary" (click)="editSelectedArticle()">
+              <span>
+                <i class="fa fa-edit fa-2x"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-text mt-5">
+          {{selectedArticle.text}}
+        </p>
+        <blockquote class="blockquote mb-0">
+          <footer class="blockquote-footer">Bron:
+            <cite title="Source Title">{{selectedArticle.source}}</cite>
+          </footer>
+        </blockquote>
+      </div>
+
+      <div class="card-footer text-muted">
+        Auteur: {{selectedArticle.author }}
+      </div>
+    </div>
+    <!--*ngIf="selectArticle.hasSource"-->
+
+  </div>
+
+</div>
+<!--End Of Row - Page-->

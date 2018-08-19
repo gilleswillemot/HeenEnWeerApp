@@ -1,0 +1,26 @@
+<div id="alert" class="align-middle">
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h3 class="modal-title"><b>{{titel}}</b></h3>
+
+      <button id="kruisje" type="button" class="close" aria-label="Close" (click)="uitvoeren(false);d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>
+        <!--      <ngb-alert>-->
+        <!--      </ngb-alert>-->
+        {{alertBoodschap}}
+
+
+      </p>
+    </div>
+    <div class="modal-body">
+      <button type="button" class="btn btn-danger ml-5 mr-3" (click)="uitvoeren(true);c('Close click')">{{welBoodschap}}</button>
+      <button type="button" class="btn btn-default" (click)="uitvoeren(false);c('Close click')">{{nietBoodschap}}</button>
+    </div>
+    <!--  <button id="test" #test class="btn btn-outline-primary" (click)="open(content);c('Close click')"" ></button>-->
+
+  </ng-template>
+</div>

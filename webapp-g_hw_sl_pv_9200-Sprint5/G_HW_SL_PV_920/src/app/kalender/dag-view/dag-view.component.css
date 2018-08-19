@@ -1,0 +1,20 @@
+/*table {
+  background-image: url(../../../assets/white-background.jpg);
+  background-size: 100%;
+}*/
+
+button {
+    color: white;
+}
+
+button:hover {
+    opacity: 0.5;
+}
+
+.tijdspan {
+    width: 7%;
+}
+
+button {
+    font-size: 100%;
+}

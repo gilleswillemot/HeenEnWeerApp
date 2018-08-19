@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragmentContainerKalender">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="390dp"
+            android:id="@+id/linLayCal"
+            android:orientation="vertical">
+            <com.applandeo.materialcalendarview.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:headerColor="@color/colorPrimary"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:selectionColor="@color/colorAccent"
+                app:todayLabelColor="@color/colorPrimaryDark" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/linLayCal">
+
+
+            <TextView
+                android:id="@+id/txtVerblijf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/txtDatum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_marginTop="6dp"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@id/txtVerblijf"/>
+
+
+            <fragment android:name="com.example.gilles.g_hw_sl_pv_9200.Fragments.ActiviteitlijstFragment"
+                android:id="@+id/activiteitenlijstFragment"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent" />
+
+
+            <!--
+                <TextView
+                    android:id="@+id/lblActiviteit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Activiteiten"
+                    android:layout_marginTop="20dp"
+                    android:textSize="25sp"
+                    android:textColor="#FF3F51B5"
+                    app:layout_constraintTop_toBottomOf="@id/txtDatum"/>
+
+                <TextView
+                    android:id="@+id/txtActiviteit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:background="@layout/layout_border"
+                    android:cursorVisible="false"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@id/txtDatum" />-->
+            <!--
+                    <ListView
+                    android:id="@+id/listActiviteiten"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"
+                    />-->
+            <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/txtDatum"
+                >
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:layout_alignParentLeft="true"
+                    android:entries="@array/activiteiten_array"
+                    android:textSize="15sp"
+                    />
+                <TextView
+                    android:id="@+id/priceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+
+                    android:gravity="right"
+                    android:text="100"
+                    />
+                <TextView
+
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:layout_toRightOf="@+id/priceText"
+                    android:gravity="right"
+                    android:text="1.3"
+                    />
+            </RelativeLayout>-->
+        </LinearLayout>
+    </LinearLayout>
+
+
+<!--
+    <CalendarView
+        android:id="@+id/kalenderView"
+        android:layout_width="match_parent"
+        android:layout_height="304dp" />-->
+
+</android.support.constraint.ConstraintLayout>

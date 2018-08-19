@@ -1,0 +1,66 @@
+<form class="mt-5" [formGroup]='newArticle' (ngSubmit)='onSubmit()'>
+  <!--*ngIf="ready"-->
+  <div class="form-group row">
+    <div class="col-3 offset-2">
+      <label class="float-right">Titel:</label>
+    </div>
+    <div class="col-4">
+      <input class="form-control" formControlName='title'>
+      <div class='alert alert-danger' *ngIf=' newArticle.get("title").errors?.required && newArticle.get("title").touched'>
+        Gelieve een titel op te geven.
+      </div>
+      <div class='alert alert-danger' *ngIf='newArticle.get("title").errors?.minlength && newArticle.get("title").touched'>
+        De titels moet minimum {{newArticle.get("title").errors?.minlength.requiredLength }} letters bevatten.
+      </div>
+      <!-- <div class='alert alert-danger' *ngIf='user.get("email").errors?.emailAlreadyExists && user.get("email").touched'>
+            An article with that email already exists
+          </div> -->
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-3 offset-2">
+      <label class="float-right">Tekst:</label>
+    </div>
+    <div class="col-4">
+      <textarea rows="3" class="form-control" formControlName='text'></textarea>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-3 offset-2">
+      <label class="float-right">Auteur:</label>
+    </div>
+    <div class="col-4">
+      <input class="form-control" formControlName='author'>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-3 offset-2">
+      <label class="float-right">Bron:</label>
+    </div>
+    <div class="col-4">
+      <!-- <checkbox>Is weblink?</checkbox> -->
+      <input class="form-control" formControlName='source'>
+    </div>
+  </div>
+
+  <div class="mt-5 row">
+    <div class="col-4 offset-4">
+      <button type='submit' [disabled]='!newArticle.valid' class="btn btn-primary offset-4">
+        <span *ngIf="!editArticle">
+          <i class="fa fa-plus"></i>
+          Artikel aanmaken
+        </span>
+        <span *ngIf="editArticle">
+          <i class="fa fa-edit"></i>
+          Wijzigingen doorvoeren
+        </span>
+
+      </button>
+      <button type="button" class="btn btn-default" (click)="_location.back();">annuleer</button>
+    </div>
+  </div>
+</form>
+<p *ngIf="errorMsg">{{errorMsg}</p>

@@ -1,0 +1,89 @@
+#username {
+ color: orange;
+}
+
+#username2 :hover {
+  color: white !important;
+}
+
+nav li a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar {
+  padding: 0;
+}
+
+nav li {
+  margin: 0;
+  line-height: 190%;
+}
+
+
+.navbar-toggler {
+  color: white;
+}
+  nav li:hover {
+    color: white;
+    background-color: dodgerblue;
+  }
+
+
+.active-current {
+  /*color: white !important;*/
+  color: white !important;
+  background-color: dodgerblue;
+  line-height: 190%;
+}
+
+.nav-item {
+  margin-left: 50%;
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 150%;
+  opacity: 0.9;
+}
+
+.navbar-nav {
+  align-items: center;
+}
+
+
+nav {
+  background-image: url('../../assets/bluebackground_website.jpg') !important;
+  background-size: 100%;
+  font-size: 150%;
+}
+
+#dropdownBasic1 {
+  border: none;
+  font-size: 130%;
+  color: white;
+}
+
+.dropdown-item {
+  font-size: 150%;
+}
+
+  .dropdown-item:hover {
+    background-color: aliceblue;
+  }
+
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+/*a.active-link {
+  opacity: 0.8;
+  filter: alpha(opacity=50);
+}*/
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  background-color: white;
+  opacity: 0.5;
+}

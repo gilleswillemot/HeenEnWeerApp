@@ -1,0 +1,66 @@
+<br />
+<div class="col-6 offset-3 mt-3">
+  <div class="card" *ngIf="ingelogdeGebruiker">
+    <div class="card-header">
+      <h1 style="margin: 1%;">Gezin Aanmaken</h1>
+    </div>
+    <div class="card-block">
+      <form [formGroup]="gezin" (ngSubmit)="onSubmit()">
+        <div class="form-group row" id="ouders">
+          <div class="col-2">
+            <label class="float-right"><b>Gezinsnaam:</b></label>
+          </div>
+          <!--REMOVE {{gezin.value | json}}-->
+          <div class="col-4">
+            <input class="form-control" value="{{ingelogdeGebruiker.familienaam}} - {{getFamilienaamAndereOuder()}}" readonly/>
+          </div>
+        </div>
+        <br />
+        <div class="form-group row" id="ouders">
+          <div class="col-2">
+            <label class="float-right"><b>Ouders:</b></label>
+          </div>
+          <div class="col-4">
+            <input formControlName="ouder1" class="form-control" type="text" readonly value="{{ingelogdeGebruiker.voornaam}} {{ingelogdeGebruiker.familienaam}}" />
+            <input formControlName="ouder2" class="form-control" type="text" placeholder="Voornaam Familienaam" />
+            <!--<input formControlName="plusouder1" class="form-control" type="text" readonly placeholder="Volledige naam Plusouder" />
+            <input formControlName="plusouder2" class="form-control" type="text" readonly placeholder="Volledige naam Plusouder" />-->
+          </div>
+          <div class="col-4">
+            <input class="form-control" type="email" readonly value="{{ingelogdeGebruiker.email}}" />
+            <input formControlName="ouder2Email" class="form-control" type="email" placeholder="emailadres&hellip;" />
+            <!--<input formControlName="plusouder1" class="form-control" type="email" placeholder="emailadres&hellip;" />
+            <input formControlName="plusouder2" class="form-control" type="email" placeholder="emailadres&hellip;" />-->
+          </div>
+        </div>
+        <br />
+        <div class="form-group row" id="ouders">
+          <!--<p>{{!_kindToevoegen && kinderen.length > 1}}</p>-->
+          <div class="col-2">
+            <label *ngIf="kinderen.length > 0" class="float-right"><b>Kinderen:</b></label>
+          </div>
+          <div class="col-4">
+            <div *ngFor="let kind of kinderen">
+              <input class="form-control kindNaam" readonly value="{{kind.voornaam}} {{kind.familienaam}}" [style.background-color]="kind.kleur"/>
+            </div>
+            <div *ngIf="!_kindToevoegen">
+              <button type="button" class="btn btn-primary" (click)="_kindToevoegen = true">Kind Aanmaken <i class="fa fa-user-plus"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <div class="col-2 offset-9">
+            <button type="submit" class="btn btn-success" [disabled]="!gezin.valid"><i class="fa fa-plus"></i> Gezin Aanmaken</button>
+          </div>
+          <div class="col-3 offset-9 mt-2" style="font-size: 90%; color: red;"*ngIf="errorMsg">
+            {{errorMsg}}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="col-6 offset-3 mt-5" *ngIf="_kindToevoegen">
+  <app-kind-aanmaken (nieuwKind)="kindToevoegen($event)"
+                     (annuleerKindAanmaken)="annuleerKindAanmaken()"></app-kind-aanmaken>
+</div>

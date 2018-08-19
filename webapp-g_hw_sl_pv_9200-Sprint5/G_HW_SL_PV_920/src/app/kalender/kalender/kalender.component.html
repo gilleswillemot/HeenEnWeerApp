@@ -1,0 +1,169 @@
+<ngb-accordion #acc="ngbAccordion" activeIds={{activePanel}}>
+  <ngb-panel id="panel-kalender">
+    <ng-template ngbPanelTitle>
+      <div class="row justify-content-center" id="kalenderWeergaveKnop" *ngIf="activiteitBewerkenOfToevoegen">
+        <button class="btn btn-primary col-md-1" (click)="kalenderWeergaveKnopInversen()">
+          Kalender <span *ngIf="kalenderWeergeven" class="glyphicon glyphicon-chevron-up"></span>
+          <span *ngIf="!kalenderWeergeven" class="glyphicon glyphicon-chevron-down"></span>
+        </button>
+      </div>
+    </ng-template>
+    <ng-template ngbPanelContent>
+      <div class="row card-columns" id="yoooo">
+        <div class="col-2">
+          <div id="sidebar" class="card">
+            <div class="card-header">
+              Gezinnen
+            </div>
+            <div class="card-block">
+              <div id="gezinnen">
+                <ul>
+                  <li [ngClass]="{'activeGezin':geselecteerdGezin(gezin.id)}"
+                      *ngFor="let gezin of gezinnen"
+                      style="font-size: 130%; padding-left: 1%;"><i class="fa fa-users"></i> {{gezin.naam}}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="card-header">
+              Gezinsleden
+            </div>
+            <div class="card-block">
+              <ul id="gezinsLeden justify-content-center" style="list-style-type: none;">
+                <li class="persoon" routerLink="/profiel/{{lid.id}}"
+                    *ngFor="let lid of gezinsLeden"
+                    [style.background-color]="lid.kleur"
+                    style="color: black;">
+                  <i class="fa fa-user"></i> {{lid.voornaam}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-10">
+          <div class="card">
+            <div class="card-block">
+              <div class="row text-center" id="kalenderButtons">
+                <div class="col-md-3">
+                  <div class="btn-group">
+                    <button *ngIf="!activiteitBewerkenOfToevoegen"
+                            class="btn btn-primary"
+                            (click)="acc.toggle('panel-kalender'); activiteitToevoegenOfBewerken()">
+                      <span class="glyphicon glyphicon-plus"></span>
+                      Nieuwe Activiteit
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="btn btn-primary"
+                       mwlCalendarPreviousView
+                       [view]="view"
+                       [(viewDate)]="viewDate"
+                       (viewDateChange)="activeDayIsOpen = false">
+                    <span class="glyphicon glyphicon-chevron-left" (click)="veranderEvents(true)"></span>
+                  </div>
+                  <span id="kalenderHeaderText">
+                    <span *ngIf="view !== 'week';else dayOrMonth">
+                      <span> {{ viewDate | calendarDate:(view + 'ViewTitle') }} </span>
+                    </span>
+                    <ng-template #dayOrMonth>
+                      <span> {{weekHeader}} </span>
+                    </ng-template>
+                  </span>
+                  <div class="btn btn-primary"
+                       mwlCalendarNextView
+                       [view]="view"
+                       [(viewDate)]="viewDate"
+                       (viewDateChange)="activeDayIsOpen = false">
+                    <span class="glyphicon glyphicon-chevron-right" (click)="veranderEvents(false)"></span>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="btn-group">
+                    <div class="btn btn-primary fontSize110percent"
+                         (click)="view = 'month'"
+                         [class.active]="view === 'month'">
+                      Maand
+                    </div>
+                    <div class="btn btn-primary fontSize110percent"
+                         (click)="view = 'week'"
+                         [class.active]="view === 'week'">
+                      Week
+                    </div>
+                    <div class="btn btn-primary fontSize110percent"
+                         (click)="view = 'day'"
+                         [class.active]="view === 'day'">
+                      Dag
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12" id="kalender" [ngSwitch]="view">
+                <mwl-calendar-month-view *ngSwitchCase="'month'"
+                                         [viewDate]="viewDate"
+                                         [events]="_customEvents"
+                                         [refresh]="refresh"
+                                         [activeDayIsOpen]="activeDayIsOpen"
+                                         (dayClicked)="dayClicked($event.day)"
+                                         (eventClicked)="handleEvent('Clicked', $event.event); acc.toggle('panel-kalender')"
+                                         (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-month-view>
+                <app-week-view *ngSwitchCase="'week'"
+                               [viewDate]="viewDate"
+                               (eventClicked)="handleEvent('Clicked', $event.event); acc.toggle('panel-kalender')"
+                               [events]="_customEvents"
+                               [refresh]="refresh">
+                </app-week-view>
+                <!--<mwl-calendar-day-view *ngSwitchCase="'day'"
+                                       [viewDate]="viewDate"
+                                       [events]="_customEvents"
+                                       [refresh]="refresh"
+                                       (eventClicked)="handleEvent('Clicked', $event.event); acc.toggle('panel-kalender')"
+                                       (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-day-view>-->
+                <app-dag-view *ngSwitchCase="'day'"
+                              [viewDate]="viewDate"
+                              [events]="_customEvents"
+                              [refresh]="refresh"
+                              (eventClicked)="handleEvent('Clicked', $event.event); acc.toggle('panel-kalender')">
+                </app-dag-view>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>
+
+<!--<ngb-panel id="panel-activiteit" *ngIf="activiteitBewerkenOfToevoegen">
+<ng-template ngbPanelTitle>
+    <div class="row justify-content-center" id="kalenderWeergaveKnop" *ngIf="activiteitBewerkenOfToevoegen">
+        <h3>Activiteit</h3>
+    </div>
+</ng-template>-->
+<br />
+<div *ngIf="activiteitBewerkenOfToevoegen">
+  <!--ngbPanelContent-->
+  <div class="row" id="activiteitToevoegenOfBewerken">
+    <!--<div class="row justify-content-center" id="kalenderWeergaveKnop">
+      <button class="btn btn-primary col-md-1" (click)="kalenderWeergaveKnopInversen()">
+        <span *ngIf="kalenderWeergeven" class="glyphicon glyphicon-chevron-up"></span>
+        <span *ngIf="!kalenderWeergeven" class="glyphicon glyphicon-chevron-down"></span>
+      </button>
+    </div>-->
+    <div class="col-5 ml-5">
+      <app-activiteit-bewerken [gezinsLeden]="gezinsLeden"
+                               [activiteitBewerken]="activiteitBewerken"
+                               [_geselecteerdeActiviteit]="_geselecteerdeActiviteit"
+                               (activiteitActie)="activiteitActieUitvoeren($event);acc.toggle('panel-kalender')"
+                               (gewijzigdeActiviteit)="wijzigActiviteit($event); acc.toggle('panel-kalender')">
+
+      </app-activiteit-bewerken>
+    </div>
+    <div class="col-6 mr-1">
+      <app-activiteit-gesprek *ngIf="activiteitBewerken"
+                              [geselecteerdeActiviteit]="_geselecteerdeActiviteit"></app-activiteit-gesprek>
+    </div>
+  </div>
+</div>
+<!--</ngb-panel>-->

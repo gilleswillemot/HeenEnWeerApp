@@ -1,0 +1,96 @@
+.form-control.ng-touched.ng-invalid {
+  border: 2px solid red;
+}
+
+h2 {
+  text-align: center;
+  font-size: 200%;
+  opacity: 0.8;
+}
+
+.form-group.row {
+  margin-bottom: 3%;
+}
+
+.kostToevoegen {
+  border: solid 2px grey;
+  border-radius: 5px;
+}
+
+input {
+  font-size: 130%;
+}
+
+.btn {
+  font-size: 110%;
+}
+
+hr {
+  margin-top: 15px;
+  border: 2px solid;
+  opacity: 0.2;
+}
+
+label {
+  font-size: 150%;
+  float: right;
+}
+
+.labelDiv {
+  font-weight: bold;
+  padding-right: 0%;
+}
+
+textarea {
+  height: 6em;
+  font-size: 120%;
+  resize: none;
+  overflow-x: hidden;
+}
+
+select {
+  font-size: 130%;
+  height: auto !important;
+}
+
+.required {
+  color: red;
+}
+
+.customCheckbox label {
+  font-size: 130%;
+  float: none;
+}
+
+.customCheckbox {
+  padding-left: 5%;
+  padding-top: 1%;
+}
+
+
+input[type=checkbox] {
+  display: none;
+}
+  /* to hide the checkbox itself */
+  input[type=checkbox] + label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+  }
+
+  input[type=checkbox] + label:before {
+    content: "\f096";
+  }
+  /* unchecked icon */
+  input[type=checkbox] + label:before {
+    letter-spacing: 10px;
+  }
+  /* space between checkbox and label */
+
+  input[type=checkbox]:checked + label:before {
+    content: "\f046";
+  }
+  /* checked icon */
+  input[type=checkbox]:checked + label:before {
+    letter-spacing: 5px;
+  }
+/* allow space for check mark */

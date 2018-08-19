@@ -1,0 +1,76 @@
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a routerLink="/homepage" routerLinkActive="active-link" class="navbar-brand">
+    <h2 style="font-size:150%">TwoWay</h2>
+  </a>
+  <div class="collapse navbar-collapse flex-row-reverse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <div *ngIf="(currentUser | async); then content2"></div>
+      <!--Hier heb je normaal genoeg aan 'heeftGezin', want als
+      gezinId != null dan is er een user en heeft hij een gezin (dus toon alle tabs), anders toon je 'gezin aanmaken'-->
+      <ng-template #content2>
+        <div *ngIf="(heeftGezin | async);then content else other"></div>
+      </ng-template>
+      <ng-template #content>
+        <li class="nav-item ml-4">
+          <a class="nav-link" [routerLink]="['/gezin']" routerLinkActive="active-current">
+            <i class="fa fa-users"></i> Gezin</a>
+        </li>
+        <li class="nav-item ml-4">
+          <a class="nav-link" [routerLink]="['/kalender']" routerLinkActive="active-current">
+            <i class="fa fa-calendar"></i> Kalender</a>
+        </li>
+        <li class="nav-item  ml-4">
+          <a class="nav-link" [routerLink]="['/kostenbeheer']" routerLinkActive="active-current">
+            <i class="fa fa-euro"></i> Kostenbeheer</a>
+        </li>
+        <li class="nav-item  ml-4">
+          <a class="nav-link" [routerLink]="['/berichten']" routerLinkActive="active-current">
+            <i class="fa fa-comments"></i> Berichten</a>
+        </li>
+        <li class="nav-item  ml-4">
+          <a class="nav-link" [routerLink]="['/kennisCentrum']" routerLinkActive="active-current">
+            <i class="fa fa-book"></i> Kenniscentrum</a>
+        </li>
+      </ng-template>
+      <ng-template #other>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/gezinAanmaken" routerLinkActive="active-current">Gezin aanmaken</a>
+          <span class="sr-only"></span>
+        </li>
+      </ng-template>
+      <li class="nav-item ml-4" *ngIf='!(currentUser | async)'>
+        <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active-current">
+          <i class="fa fa-sign-in"></i> Inloggen</a>
+      </li>
+      <li class="nav-item ml-4 mr-5" *ngIf='!(currentUser | async)'>
+        <a class="nav-link" [routerLink]="['/registreren']" routerLinkActive="active-current">
+          <i class="fa fa-user-plus"></i> Registreren</a>
+      </li>
+      <li class="nav-item ml-4 mr-5" routerLinkActive="active current" *ngIf='(currentUser | async)'>
+        <div ngbDropdown placement="bottom-right" class="d-inline-block">
+          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+            <span class="glyphicon glyphicon-user"></span>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <div *ngIf='(currentUser | async)'>
+              <button class="dropdown-item" routerLink="/profiel">Mijn Profiel</button>
+              <button class="dropdown-item" (click)="logout()">Afmelden</button>
+            </div>
+            <div *ngIf='!(currentUser | async)'>
+              <button class="dropdown-item" routerLink="/login">Inloggen</button>
+              <button class="dropdown-item" routerLink="/registreren">Registreren</button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="mr-5" id="username2" *ngIf='(username | async)'>
+          <p id="username">
+              {{username | async}}</p>
+      </li>
+    </ul>
+  </div>
+</nav>

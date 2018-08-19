@@ -1,0 +1,106 @@
+<div>
+  <div class="card ">
+    <div class="card-header d-flex justify-content-end">
+      <h2 class="mr-auto p-2"><b>{{cardHeader}}</b></h2>
+      <button class="btn btn-primary" routerLink="/kalender" (click)="annuleerActiviteitWijzigen()">
+        <i class="fa fa-mail-reply"></i>
+      </button>
+    </div>
+    <div class="card-block col-12">
+      <form [formGroup]="activiteit" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="form-group col-4">
+            <label><b>Titel:</b></label>
+            <input type="text" id="titel" class="form-control" formControlName="titel">
+            <div *ngIf='activiteit.get( "titel" ).errors?.required && activiteit.get("titel").touched'
+                 class='ui pointing red basic label' style="color: red;">
+              Moet ingevuld zijn!
+            </div>
+            <div *ngIf='activiteit.get( "titel" ).errors?.maxlength && activiteit.get("titel").touched'
+                 class='ui pointing red basic label' style="color: red;">
+              Maximum 20 letters!
+            </div>
+            <div *ngIf='activiteit.get( "titel" ).errors?.minlength && activiteit.get("titel").touched'
+                 class='ui pointing red basic label' style="color: red;">
+              Je moet meer dan 2 letters invullen!
+            </div>
+          </div>
+          <div class="form-group marginL">
+            <label><b>Kleur van deze activiteit:</b></label>
+            <div>
+              <color-picker [(ngModel)]="color"
+                            [availableColors]="availableColors"
+                            [pickerConfig]="pickerOptions"
+                            [ngModelOptions]="{standalone: true}">
+              </color-picker>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><b>Betrokken personen:</b></label><br/>
+
+            <div class="row col-6" formArrayName="personen">
+                
+                <div
+                     class="col-6" [formGroupName]="i" *ngFor='let persoon of personen.controls; let i = index'>
+
+                      <input id="box{{i}}" type="checkbox" formControlName="checked"/>
+                        <label for="box{{i}}">{{persoon.value.naam}}</label>
+                    </div>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 0.5em">
+          <div class="form-group">
+            <label><b>Startdatum:</b></label>
+            <mwl-demo-utils-date-time-picker [(ngModel)]="startDatum"
+                                             (ngModelChange)="refresh.next()"
+                                             placeholder="Not set"
+                                             [ngModelOptions]="{standalone: true}">
+            </mwl-demo-utils-date-time-picker>
+          </div>
+          <div class="form-group marginL">
+            <label><b>Einddatum (optioneel):</b></label>
+
+            <mwl-demo-utils-date-time-picker [(ngModel)]="eindDatum"
+                                             (ngModelChange)="refresh.next()"
+                                             placeholder="Not set"
+                                             [ngModelOptions]="{standalone: true}">
+            </mwl-demo-utils-date-time-picker>
+          </div>
+            <div class="form-group marginL">
+                <label><b>Wederkerende activiteit?</b></label>
+              <br/>
+                <select>
+                    <option selected>Niet wederkerend</option>
+                    <option>Wekelijks</option>
+                    <option>Maandelijks</option>
+                </select>
+          </div>
+        </div>
+
+          <div class="row" style="margin-left: 0.5em">
+              <div class="form-group" id="beschrijving">
+                  <label><b>Beschrijving:</b></label><br />
+                  <textarea formControlName="beschrijving" style="width: 30em"></textarea>
+              </div>
+          </div>
+        <div class="ml-3">
+          <button type="submit" class="btn btn-success" [disabled]="!activiteit.valid" (click)="onSubmit()">
+            <span class="glyphicon glyphicon-ok"></span>
+          </button>
+          <button type="button" class="btn btn-danger" style="margin-left: 1em" (click)="openAlert()">
+            <span class="glyphicon glyphicon-trash"></span>
+          </button>
+        </div>
+        <div *ngIf="alert">
+          <app-alert [titel]="'Activiteit verwijderen'"
+                     [alertBoodschap]="'Bent u zeker dat de activiteit mag verwijderd worden?'"
+                     [welBoodschap]="'Verwijderen'"
+                     [nietBoodschap]="'Niet verwijderen'"
+                     (actie)="activiteitVerwijderen($event)"></app-alert>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>

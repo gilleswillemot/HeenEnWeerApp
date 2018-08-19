@@ -1,0 +1,108 @@
+<div class="row" style="margin-top: 2%; margin-left: 2%" *ngIf="gesprekken && huidigGesprek">
+  <div class="col-3">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="d-flex justify-content-end">
+          <b class="mr-auto p-2">Gesprekken</b>
+          <button style="border-radius: 20px; font-size: 90%;" class="btn btn-primary" (click)="gesprekAanmaken()">
+            <i class="fa fa-plus"></i>
+          </button>
+        </h1>
+      </div>
+      <div class="card-block" id="gesprekkenOverzicht">
+        <div class="list-group">
+            <div class="list-group-item" *ngFor="let gesprek of gesprekken"
+                 [ngClass]="{'active': gesprek.id === huidigGesprek.id}">
+            <a class="justify-content-between col-10"
+               (click)="gesprekOphalen(gesprek.id, gesprek.heeftActiviteit)"
+              >
+              {{gesprek.gespreksnaam}}
+              <span *ngIf="gesprek.heeftActiviteit" class="badge badge-info badge-pill">activiteit</span>
+              <!--TODO badge pill moet aantal gesprekken na uw laatste weergeven.-->
+              <!--<span class="badge badge-default badge-pill">{{gesprek.nieuweBerichten}}</span>-->
+            </a>
+              <button *ngIf="gesprek.gespreksnaam !== gezinNaam"
+                      [ngStyle]="{'background-color':gesprek.id === huidigGesprek.id?'#0275d8':'white'}"
+                      class="btn btn-danger removeButton col-2" (click)="gesprekId = gesprek.id"><span class="glyphicon glyphicon-remove"></span></button>
+          </div>
+          <div *ngIf="gesprekId">
+            <app-alert [titel]="'Gesprek verwijderen'"
+                       [alertBoodschap]="'Bent u zeker dat u dit gesprek wil verwijderen?'"
+                       [welBoodschap]="'Verwijderen'"
+                       [nietBoodschap]="'Annuleer'"
+                       [isOpen]="openAlert"
+                       (actie)="gesprekVerwijderen(gesprekId, $event)">
+
+            </app-alert>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+
+    <div class="card">
+      <div class="card-header">
+        Personen in dit gesprek
+      </div>
+      <div class="card-block" *ngIf="personenInHuidigGesprek">
+        <p>{{personenInHuidigGesprek}}</p>
+      </div>
+    </div>
+    <br />
+    <div class="card" *ngIf="gesprekMetActiviteit">
+      <div class="card-header">
+        Activiteit
+      </div>
+      <div class="card-block">
+        <div class="jumbotron">
+          <!--<h2>
+              <b>Dit gesprek heeft betrekking tot volgende activiteit:</b>
+          </h2><br/>-->
+          <h3 class="display-5">
+            <b>Titel:</b> {{ingevoegdeActiviteit.title}}
+          </h3>
+          <h3 class="display-5">
+            <b>Startdatum:</b> {{ingevoegdeActiviteit.start.toLocaleTimeString("nl", options)}}
+          </h3>
+          <h3 class="display-5">
+            <b>Einddatum:</b> {{ingevoegdeActiviteit.end.toLocaleDateString()}}
+          </h3>
+          <h3 class="display-5">
+            <b>Betrokken personen:</b>
+          </h3>
+          <ul>
+            <li *ngFor="let persoon of activiteitPersonen">{{persoon}}</li>
+          </ul>
+          <h3 class="display-5">
+            <b>Beschrijving:</b>
+          </h3>
+          <p>{{ingevoegdeActiviteit.beschrijving}}</p>
+          <p>
+            <a [routerLink]="['/kalender', ingevoegdeActiviteit.id]"
+               class="btn btn-lg btn-success"><i class="fa fa-calendar"></i>&nbsp;Naar kalender</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-8" *ngIf="_gesprekAanmaken; else berichtenWeergeven">
+    <app-gesprek-aanmaken 
+                          (nieuwGesprek2)="nieuwGesprek($event)"
+                          (annuleren)="gesprekAanmakenAnnuleren()"></app-gesprek-aanmaken>
+
+  </div>
+  <ng-template #berichtenWeergeven>
+    <div class="col-8" *ngIf="huidigGesprek">
+      <!--TODO[style.background-color]="act.color.primary" berichtkleur wijzigen-->
+
+      <app-gesprek [huidigGesprek]="huidigGesprek"
+                   (nieuwBericht)="berichtToevoegen($event)"></app-gesprek>
+    </div>
+  </ng-template>
+  <div class="row col-9 offset-3">
+
+
+  </div>
+</div>

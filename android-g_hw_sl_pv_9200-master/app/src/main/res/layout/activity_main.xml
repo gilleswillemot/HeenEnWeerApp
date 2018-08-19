@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.gilles.g_hw_sl_pv_9200.Activities.MainActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:id="@+id/btnKalender"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/achtergrond__button_homescreenb"
+            android:drawableLeft="@drawable/calendaraang"
+            android:paddingLeft="13dp"
+            android:paddingRight="50dp"
+            android:text="Kalender"
+            android:textAlignment="viewEnd"
+
+            android:textSize="18dp"
+            tools:ignore="RtlCompat" />
+
+        <Button
+            android:id="@+id/btnMessages"
+            android:layout_width="match_parent"
+
+            android:layout_height="85dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/achtergrond__button_homescreenc"
+            android:drawableRight="@drawable/messager"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingRight="15dp"
+            android:text="Berichten"
+            android:textAlignment="viewStart"
+            android:textSize="18dp"
+            tools:ignore="RtlCompat" />
+
+        <Button
+            android:id="@+id/btnGezin"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/achtergrond__button_homescreenb"
+            android:drawableLeft="@drawable/family"
+            android:paddingLeft="13dp"
+            android:paddingRight="50dp"
+            android:text="Mijn Gezin"
+            android:textAlignment="viewEnd"
+            android:textSize="18dp"
+            tools:ignore="RtlCompat" />
+
+        <!--<Button-->
+            <!--android:id="@+id/btnKindInfo"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="85dp"-->
+            <!--android:layout_gravity="start"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@drawable/achtergrond__button_homescreenb"-->
+            <!--android:drawableLeft="@drawable/family"-->
+            <!--android:paddingLeft="13dp"-->
+            <!--android:paddingRight="50dp"-->
+            <!--android:text="Kind infoscherm"-->
+            <!--android:textAlignment="viewEnd"-->
+            <!--android:textSize="18dp"-->
+            <!--tools:ignore="RtlCompat" />-->
+
+        <Button
+            android:id="@+id/btnKosten"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/achtergrond__button_homescreenc"
+            android:drawableRight="@drawable/bankeuro"
+            android:gravity="center"
+            android:paddingLeft="70dp"
+            android:paddingRight="15dp"
+            android:text="Kosten"
+            android:textAlignment="viewStart"
+            android:textSize="18dp"
+            tools:ignore="RtlCompat" />
+
+        <Button
+            android:id="@+id/btnKennis"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/achtergrond__button_homescreenb"
+            android:drawableLeft="@drawable/book"
+            android:paddingLeft="12dp"
+            android:paddingRight="50dp"
+            android:text="Kenniscentrum"
+            android:textAlignment="viewEnd"
+            android:textSize="18dp"
+            tools:ignore="RtlCompat" />
+
+        <Button
+            android:id="@+id/btnAanmelden"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/achtergrond__button_homescreenc"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:text="Afmelden"
+            android:textAlignment="viewStart"
+            android:textSize="18dp"
+            tools:ignore="RtlCompat"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Groep-HW-SL-PV-920" />
+        <!--app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>-->
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
+<!--<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:overScrollMode="never"
+    android:scrollbars="none" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_color" >
+
+        <ImageView
+            android:id="@+id/close_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="top|end"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/closebutton"
+            android:padding="5dp"
+            android:src="@drawable/close" />
+
+        <FrameLayout
+            android:id="@+id/frameContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/close_activity" />
+    </RelativeLayout>
+
+</ScrollView>-->

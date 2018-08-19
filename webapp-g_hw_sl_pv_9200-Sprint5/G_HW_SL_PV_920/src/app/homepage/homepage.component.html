@@ -1,0 +1,69 @@
+<div class="header mt-5">
+<h1 class="mb-5">
+  <b>Welkom op de website van TwoWay!</b>
+</h1>
+</div>
+<div class="text-center mt-5">
+  <img src="../../assets/twoway.png" />
+</div>
+
+<br /><br />
+<div class="row rij" *ngIf="(currentUser | async)">
+  <div class="col-4">
+    <div class="card">
+      <div class="card-header">Berichten</div>
+      <div class="card-block">
+        <!--*ngIf="berichten.length === 0"-->
+        <p>Er zijn geen nieuwe berichten.</p>
+        <hr />
+        <p>
+          <b>Ga naar recentste gesprek.</b>
+          <button class="fa fa-comments btn btn-success"></button>
+        </p>
+      </div>
+      <div class="card-footer"></div>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card">
+      <div class="card-header">Activiteiten</div>
+      <div class="card-block">
+        <!--*ngIf="berichten.length === 0"-->
+        <p>Er zijn geen nieuwe activiteiten.</p>
+        <hr />
+
+        <p>
+          <b>Ga naar dagoverzicht.</b>
+          <button class="fa fa-calendar btn btn-success"></button>
+        </p>
+      </div>
+      <div class="card-footer"></div>
+
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card">
+      <div class="card-header">Kosten</div>
+      <div class="card-block">
+        <!--*ngIf="berichten.length === 0"-->
+        <p>Er zijn geen nieuwe kosten.</p>
+        <hr />
+        <p>
+          <b>Ga naar kosten.</b>
+          <button class="fa fa-euro btn btn-success"></button>
+        </p>
+      </div>
+      <div class="card-footer"></div>
+
+    </div>
+  </div>
+</div>
+<div *ngIf="!(currentUser | async)">
+  <div class="col-6 offset-3 mt-5">
+    <div class="text-center">
+      <h3>Heb je al een account? Klik <a [routerLink]="['/login']">hier</a> om in te loggen.</h3>
+      <h3>Klik <a [routerLink]="['/registreren']">hier</a> om te registreren.</h3>
+    </div>
+
+  </div>
+</div>

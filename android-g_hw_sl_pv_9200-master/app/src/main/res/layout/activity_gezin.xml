@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.gilles.g_hw_sl_pv_9200.Activities.GezinActivity">
+
+    <TextView
+        android:id="@+id/textViewGezinsNaam"
+        android:layout_width="327dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="29dp" />
+
+    <ListView
+        android:id="@+id/listViewGezinsleden"
+        android:layout_width="325dp"
+        android:layout_height="408dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewGezinsNaam"
+        tools:layout_editor_absoluteX="29dp" />
+
+
+</android.support.constraint.ConstraintLayout>

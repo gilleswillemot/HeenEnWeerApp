@@ -1,0 +1,60 @@
+<div *ngIf="gesprek">
+  <div class="card">
+      <div class="card-header d-flex justify-content-between">
+          <div >
+              <h3>
+                  <b>Activiteitsgesprek</b>
+              </h3>
+          </div>
+              <div *ngIf="gesprek">
+                  {{gesprek.naam}}
+              </div>
+              <div  *ngIf="gesprekGevonden">
+                  <button class="btn btn-primary" routerLink="/berichten/{{activiteitId}}">
+                      Ga naar gesprek
+                  </button>
+              </div>
+      </div>
+
+    <div *ngIf="!gesprekGevonden; else toonGesprek">
+      <div *ngIf="gesprekAanmaken; else nieuwGesprek">
+        <app-gesprek-aanmaken 
+                              (nieuwGesprek2)="nieuwGesprekAanmaken($event)"
+                              (annuleren)="gesprekAanmaken = false">
+
+        </app-gesprek-aanmaken>
+      </div>
+      <ng-template #nieuwGesprek>
+        <div class="card-block">
+          <div class="d-flex justify-content-end">
+            <div class="mr-auto p-2">
+              <h4>
+                Hier kan u een gesprek aanmaken die vervolgens
+                verbonden is met deze activiteit.
+              </h4>
+            </div>
+            <div class="p-2">
+              <button class="btn btn-success" (click)="gesprekAanmaken = true"><i class="fa fa-plus"></i> Maak gesprek</button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <ng-template #toonGesprek>
+
+      <!--<div class="card-header d-flex justify-content-end">
+        <div class="mr-auto p-2">Gesprek omtrent deze activiteit:</div>
+
+      </div>-->
+
+      <div class="card-block">
+        <app-gesprek (nieuwBericht)="berichtToevoegen($event)"
+                     [huidigGesprek]="gesprek"></app-gesprek>
+      </div>
+      <div class="card-footer">
+        <!--Personen in dit gesprek: {{gebruikersAlsString}}-->
+      </div>
+
+    </ng-template>
+  </div>
+</div>

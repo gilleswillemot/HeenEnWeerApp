@@ -1,0 +1,50 @@
+td {
+    color: white;
+}
+
+h3 {
+    text-align: center;
+}
+
+.table-responsive {
+  max-height: 47em;
+  /*overflow: auto;
+  overflow-x: hidden;
+    height: 300px;*/
+}
+
+th, td {
+    width: 10%;
+}
+
+/*#breedte0 {
+    width: 6%;
+}
+
+.breedte {
+    width: 30px!important;
+}
+.breedte1 {
+    width: 2%;
+}
+.breedte2 {
+    width: 12%;
+}*/
+
+/*thead, tbody {
+  display: block;
+}*/
+/*tbody {
+  height: 45em;  Just for the demo          
+  overflow-y: auto;  Trigger vertical scroll    
+  overflow-x: hidden;  Hide the horizontal scroll 
+}*/
+
+button {
+    font-size: 100%;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.5;
+}
