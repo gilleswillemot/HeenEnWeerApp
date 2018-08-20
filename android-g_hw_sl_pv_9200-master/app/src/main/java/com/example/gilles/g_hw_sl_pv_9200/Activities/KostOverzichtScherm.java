@@ -111,6 +111,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     }
 
     public void kostenAanvaarden(View v) {
+        List<Kost> aanvaardeKosten = new ArrayList<>();
         if (!kostenLijst.isEmpty()) {
             for (HashMap<String, String> hm : kostenLijst) {
                 for (Kost kost : kosten) {
@@ -118,9 +119,12 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
                         kost.setStatus("goedgekeurd");
                         editCost(kost);
                     }
+                    aanvaardeKosten.add(kost);
                 }
             }
         }
+        Toast.makeText(KostOverzichtScherm.this, "Kosten zijn aanvaard.", Toast.LENGTH_LONG).show();
+        updateAdapterData(aanvaardeKosten);
     }
 
     private void editCost(Kost cost) {
@@ -247,7 +251,8 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
             int kostMaand = kost.getPurchasingMonth();
             int kostJaar = kost.getPurchasingYear();
 
-            if (month == 0) {
+            if(month == -1 && year == 0) addKost = true;
+            if (month == -1) {
                 if (year == kostJaar) addKost = true;
             } else if (year == 0) {
                 if (month == kostMaand) addKost = true;
@@ -335,15 +340,20 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = super.getView(position, convertView, parent);
+            Kost viewKost = null; //kost die wordt weergegeven op deze itemview.
 
-            Kost kost = kosten.get(position); //kost die wordt weergegeven op deze itemview.
+
+            java.lang.String kostId = kostenLijst.get(position).values().toArray()[1].toString();
+            for (Kost kost : kosten) {
+                if(kost.getId().equalsIgnoreCase(kostId)) viewKost = kost;
+            }
             TextView naamKost = v.findViewById(R.id.naamKost);
 
 //            if(kost.isUitzonderlijkeKost()){
 //                v.; set border thickness higher?
 //            }
 
-            java.lang.String kostStatus = kost.getStatus().toLowerCase();
+            java.lang.String kostStatus = viewKost.getStatus().toLowerCase();
             Drawable img;
 
             if (kostStatus.equals("onbepaald")) {
@@ -357,7 +367,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
             naamKost.setCompoundDrawables(img, null, null, null);
 
 
-            java.lang.String kleur = kost.getKleur().toLowerCase();
+            java.lang.String kleur = viewKost.getKleur().toLowerCase();
             v.setBackgroundColor(getColor(kleur));
 
             return v;
