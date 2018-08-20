@@ -29,10 +29,13 @@ public class DateSelectorFragment extends Fragment {
     Spinner yearSpinner;
 
     private Actions mCallback;
-    private Calendar calendar;
+    private Calendar calendar = Calendar.getInstance();
 
     private boolean monthFlag = false;
     private boolean yearFlag = false;
+
+    private boolean hasMonthDefault;
+    private boolean hasYearDefault;
 
     private List<String> years;
 
@@ -41,26 +44,37 @@ public class DateSelectorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_date_selector, container, false);
         ButterKnife.bind(this, view);
 
-        initMonthSpinner();
-
         return view;
     }
 
-    private void initMonthSpinner() {
-        String[] mndn = {/*"maand",*/ "januari", "februari", "maart", "april", "mei", "juni", "juli",
-                "augustus", "september", "oktober", "november", "december"};
-        ArrayList<String> maanden = new ArrayList<>(Arrays.asList(mndn));
+    public void initMonthSpinner(boolean withDefault) {
+        this.hasMonthDefault = withDefault;
+        String[] maanden;
+        if (withDefault) {
+            String[] mndn = {"maand", "januari", "februari", "maart", "april", "mei", "juni", "juli",
+                    "augustus", "september", "oktober", "november", "december"};
+            maanden = mndn;
+        } else {
+            String[] mndn = {"januari", "februari", "maart", "april", "mei", "juni", "juli",
+                    "augustus", "september", "oktober", "november", "december"};
+            maanden = mndn;
+        }
         ArrayAdapter<String> mAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, maanden);
 
         monthSpinner.setAdapter(mAdapter);
-        monthSpinner.setSelection(calendar.get(Calendar.MONTH)); // zero based ?
+        if (withDefault)
+            monthSpinner.setSelection(0);
+        else
+            monthSpinner.setSelection(calendar.get(Calendar.MONTH)); // zero based ?
 
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (monthFlag) {
-                    int year = Integer.parseInt(years.get(yearSpinner.getSelectedItemPosition()));
+                    int position2 = yearSpinner.getSelectedItemPosition();
+                    int year = position2 == 0 ? 0 :
+                            Integer.parseInt(years.get(position2));
                     mCallback.monthSpinnerOnClick(position, year);
                 } else monthFlag = !monthFlag;
             }
@@ -72,18 +86,22 @@ public class DateSelectorFragment extends Fragment {
         });
     }
 
-    public void initYearSpinner(List<String> years) {
+    public void initYearSpinner(boolean withDefault, List<String> years) {
         this.years = years;
-        ArrayAdapter<String> yAdapter = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> yAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, years);
         yearSpinner.setAdapter(yAdapter);
+
+        if(withDefault){
+            yearSpinner.setSelection(0);
+        }
 
         yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (yearFlag) {
                     int month = monthSpinner.getSelectedItemPosition();
-                    int year = Integer.parseInt(years.get(position));
+                    int year = position == 0 ? 0 : Integer.parseInt(years.get(position));
                     mCallback.yearSpinnerOnClick(month, year);
                 } else yearFlag = !yearFlag;
             }
@@ -114,8 +132,9 @@ public class DateSelectorFragment extends Fragment {
     }
 
     public interface Actions {
-       // int getYearOfOldestExpense();
+        // int getYearOfOldestExpense();
         void monthSpinnerOnClick(int month, int year);
+
         void yearSpinnerOnClick(int month, int year);
     }
 

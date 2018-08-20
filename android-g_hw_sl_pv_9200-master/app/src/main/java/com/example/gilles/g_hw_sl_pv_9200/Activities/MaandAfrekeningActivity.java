@@ -159,7 +159,6 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
 
     public int getYearOfOldestExpense() {
         int beginYear = calendar.get(Calendar.YEAR);
-        List<Kost> kosten = this.kosten;
         if (kosten != null && !kosten.isEmpty()) {
             for (Kost kost : kosten) {
                 if (kost.getPurchasingYear() < beginYear) beginYear = kost.getPurchasingYear();
@@ -210,7 +209,9 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
                             initKostenListViewAdapter();
 
                             getYearOfOldestExpense(); // inits years
-                            getDateSelectorFragment().initYearSpinner(years);
+                            DateSelectorFragment frag = getDateSelectorFragment();
+                            frag.initYearSpinner(false, years);
+                            frag.initMonthSpinner(false);
                         }
                     }
                 } catch (IOException e) {

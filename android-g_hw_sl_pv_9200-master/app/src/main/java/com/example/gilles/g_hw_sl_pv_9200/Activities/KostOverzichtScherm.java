@@ -63,7 +63,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     TextView naam;
     @BindView(R.id.voegKostToeBtn)
     Button voegKostToeBtn;
-//    @BindView(R.id.displaySettingsBtn)
+    //    @BindView(R.id.displaySettingsBtn)
 //    Button showSortOptionsBtn;
     @BindView(R.id.listViewKosten)
     ListView kostenListView;
@@ -141,7 +141,9 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
                             orderKostenByDescendingPurchasingDate();
                             // initiate adapter in order to show list of Kost objects in view.
                             getYearOfOldestExpense(); // inits years
-                            getDateSelectorFragment().initYearSpinner(years);
+                            DateSelectorFragment frag = getDateSelectorFragment();
+                            frag.initYearSpinner(true, years);
+                            frag.initMonthSpinner(true);
 
                             //initKostenAdapter(kosten);
                             updateAdapterData(kosten);
@@ -213,14 +215,23 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         myHashAdapter.notifyDataSetChanged();
     }
 
-    private void updateAdapterData(int maand, int year) {
+    private void updateAdapterData(int month, int year) {
+        month = month - 1; // index 0 equals default value, so january starts at index 1
         kostenLijst.clear();
 
         for (Kost kost : kosten) {
+            boolean addKost = false;
             int kostMaand = kost.getPurchasingMonth();
             int kostJaar = kost.getPurchasingYear();
 
-            if (kostMaand == maand && kostJaar == year) {
+            if (month == 0) {
+                if (year == kostJaar) addKost = true;
+            }
+            if (year == 0) {
+                if (month == kostMaand) addKost = true;
+            } else if (kostMaand == month && kostJaar == year) addKost = true;
+
+            if (addKost) {
                 HashMap<String, String> hm = new HashMap<>();
                 hm.put("Info", kost.toString());
                 hm.put("Bedrag", kost.getBedragSpecial());
@@ -267,7 +278,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
 
     public int getYearOfOldestExpense() {
         int beginYear = calendar.get(Calendar.YEAR);
-        List<Kost> kosten = this.kosten;
+        years.add("jaar");
         if (kosten != null && !kosten.isEmpty()) {
             for (Kost kost : kosten) {
                 if (kost.getPurchasingYear() < beginYear) beginYear = kost.getPurchasingYear();
