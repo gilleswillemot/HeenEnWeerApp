@@ -71,6 +71,8 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     TextView geenKostenMessage;
     @BindView(R.id.kostenListViewHeader)
     TextView kostenListViewHeader;
+    @BindView(R.id.kostenAanvaardenButton)
+    Button kostenAanvaardenButton;
 
     private List<Kost> kosten;
     private String token;
@@ -106,14 +108,35 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         initKostenAdapter();
 
         getKostenFromDatabase(huidigGezinId);
-
     }
-//
-//    @Override
-//    public void onResume() {  // After a pause OR at startup
-//        super.onResume();
-//        getKostenFromDatabase(huidigGezinId);
-//    }
+
+    public void kostenAanvaarden(View v) {
+        if (!kostenLijst.isEmpty()) {
+            for (HashMap<String, String> hm : kostenLijst) {
+                for (Kost kost : kosten) {
+                    if (hm.values().toArray()[1].equals(kost.getId())) {
+                        kost.setStatus("goedgekeurd");
+                        editCost(kost);
+                    }
+                }
+            }
+        }
+    }
+
+    private void editCost(Kost cost) {
+        // kost toevoegen via API request
+        Call<Kost> call = RetrofitClient.getInstance(this).getApi().wijzigKost(cost.getId(), cost);
+        call.enqueue(new Callback<Kost>() {
+            @Override
+            public void onResponse(Call<Kost> call, Response<Kost> response) {
+            }
+
+            @Override
+            public void onFailure(Call<Kost> call, Throwable t) {
+                Toast.makeText(KostOverzichtScherm.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private void gaNaarKostDetailScherm(Kost selectedCost) {
         Intent intent = new Intent(this, KostToevoegen.class);
@@ -226,8 +249,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
 
             if (month == 0) {
                 if (year == kostJaar) addKost = true;
-            }
-            if (year == 0) {
+            } else if (year == 0) {
                 if (month == kostMaand) addKost = true;
             } else if (kostMaand == month && kostJaar == year) addKost = true;
 
@@ -240,6 +262,10 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
             }
         }
         myHashAdapter.notifyDataSetChanged();
+
+        if (kostenLijst.isEmpty())
+            kostenAanvaardenButton.setVisibility(View.INVISIBLE);
+        else kostenAanvaardenButton.setVisibility(View.VISIBLE);
     }
 
     private void fillAdapterData(List<Kost> list) {

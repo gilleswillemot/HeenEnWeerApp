@@ -81,6 +81,9 @@ public class Kost implements Parcelable {
     public String getStatus() {
         return status;
     }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public boolean isGoedGekeurd() {
         return status.equalsIgnoreCase("goedgekeurd");
