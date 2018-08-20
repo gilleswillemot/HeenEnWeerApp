@@ -124,7 +124,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
             }
         }
         Toast.makeText(KostOverzichtScherm.this, "Kosten zijn aanvaard.", Toast.LENGTH_LONG).show();
-        updateAdapterData(aanvaardeKosten);
+        myHashAdapter.notifyDataSetChanged();
     }
 
     private void editCost(Kost cost) {
