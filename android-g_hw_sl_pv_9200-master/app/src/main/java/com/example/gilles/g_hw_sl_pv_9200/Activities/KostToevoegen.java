@@ -8,11 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gilles.g_hw_sl_pv_9200.Backend.DataInterface;
@@ -59,23 +61,34 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
     Spinner buyerSpinner;
     @BindView(R.id.involvedPersSpinner)
     Spinner involvedPersSpinner;
+    @BindView(R.id.statusSpinner)
+    Spinner statusSpinner;
     @BindView(R.id.categorieSpinner)
     Spinner categorySpinner;
     @BindView(R.id.colorSpinner)
     Spinner colorSpinner;
     @BindView(R.id.uitzonderlijkeKostCheckBox)
     CheckBox uitzonderlijkeKostCheckBox;
+    @BindView(R.id.statusTextView)
+    TextView statusTextView;
 
     private String huidigGezinId;
     private String loggedInUserId;
     private String token;
+    private String username;
+    private String previousActivity;
+
     private List<User> gezinsLeden;
     private String[] categories = {"Vervoer", "Medisch", "Sport", "Voeding", "Kledij", "Ander"};
     private String[] colors = {"rood", "blauw", "geel", "groen", "wit", "cyaan", "grijs", "paars"};
+    private String[] statuses = {"onbepaald" , "goedgekeurd", "afgekeurd"};
+
     private List<String> buyers = new ArrayList<>();
     private List<String> involvedPersons = new ArrayList<>(Arrays.asList("Kinderen", "Iedereen"));
 
     private Kost geselecteerdeKost;
+
+    private boolean statusFlag = false;
 
     /**
      * aanmaken van het kosttoevoegenfragment
@@ -95,15 +108,17 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
         SharedPreferences prefs = getSharedPreferences("myPref", MODE_PRIVATE);
         huidigGezinId = prefs.getString("huidigGezinId", "0");
         loggedInUserId = prefs.getString("userId", "0");
+        username = prefs.getString("username", "0");
         token = prefs.getString("token", "0");
+
+        previousActivity = getIntent().getStringExtra("FROM_ACTIVITY");
+
 
         getGezinsLedenFromDatabase();
 
         initColorPickerSpinner();
 
         initCategorySpinner();
-        initPurchasingDateSpinners();
-
 
         if (geselecteerdeKost != null) { // Geef details van deze Kost weer.
             btnKostToevoegen.setText("Wijzigen doorvoeren");
@@ -114,10 +129,41 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
             mededeling.setText(geselecteerdeKost.getBeschrijving());
             getDateSelectionFragment().setSelectedDate(geselecteerdeKost.getAankoopDatum());
             uitzonderlijkeKostCheckBox.setChecked(geselecteerdeKost.isUitzonderlijkeKost());
-        } else { // maak nieuwe kost
 
+            initStatusSpinner(geselecteerdeKost.getStatus());
+            if(username.equalsIgnoreCase(geselecteerdeKost.getAangekochtDoor())) {
+                statusSpinner.setEnabled(false);
+                statusSpinner.setClickable(false);
+            }
+        } else { // maak nieuwe kost
+            statusSpinner.setVisibility(View.INVISIBLE);
+            statusTextView.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    private void initStatusSpinner(String status){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, statuses);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpinner.setAdapter(adapter);
+        statusSpinner.setSelection(Arrays.asList(statuses).indexOf(status));
+
+//        statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+//                if (statusFlag && username.equalsIgnoreCase(geselecteerdeKost.getAangekochtDoor())){
+//                    Toast.makeText(KostToevoegen.this,
+//                            "De koper van deze kost kan de status niet veranderen."
+//                            , Toast.LENGTH_LONG).show();
+//                } else statusFlag = !statusFlag;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parentView) {
+//                return;
+//            }
+//        });
     }
 
     private void getGezinsLedenFromDatabase() {
@@ -136,6 +182,8 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
                     if(geselecteerdeKost != null){
                         involvedPersSpinner.setSelection(involvedPersons.indexOf(geselecteerdeKost.getAangekochtVoor()));
                         buyerSpinner.setSelection(buyers.indexOf(geselecteerdeKost.getAangekochtDoor()));
+                        buyerSpinner.setEnabled(false);
+                        buyerSpinner.setClickable(false);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -235,9 +283,14 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
             Date aankoopDatum = getDateSelectionFragment().getSelectedDate();
             String aangekochtDoor = buyerSpinner.getSelectedItem().toString();
             String aangekochtVoor = involvedPersSpinner.getSelectedItem().toString();
+            int selectedStatusPosition = statusSpinner.getSelectedItemPosition();
+            String status = geselecteerdeKost == null || selectedStatusPosition == -1 ?
+                    "onbepaald" : statuses[selectedStatusPosition];
+
             Kost nieuweKost = new Kost(naamKost.getText().toString(), kostBedrag, aankoopDatum,
                     aangekochtDoor, aangekochtVoor, mededeling.getText().toString(), categorySpinner.getSelectedItem().toString(),
-                    colorSpinner.getSelectedItem().toString(), uitzonderlijkeKostCheckBox.isChecked());
+                    colorSpinner.getSelectedItem().toString(), uitzonderlijkeKostCheckBox.isChecked(),
+                    status);
             if (geselecteerdeKost != null) // edit / update cost.
             editCost(nieuweKost);
             else{
@@ -303,13 +356,15 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
         categorySpinner.setAdapter(adapter);
     }
 
-    private void initPurchasingDateSpinners() {
-
-    }
-
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(KostToevoegen.this, KostOverzichtScherm.class);
+        Intent intent;
+        if (previousActivity.equalsIgnoreCase("KostOverzichtScherm"))
+        {
+              intent = new Intent(KostToevoegen.this, KostOverzichtScherm.class);
+        } else {
+            intent = new Intent(KostToevoegen.this, MaandAfrekeningActivity.class);
+        }
         startActivity(intent);
     }
 

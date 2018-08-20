@@ -229,6 +229,7 @@ public class DateSelectionFragment extends Fragment {
                 return;
             }
         });
+
         yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {

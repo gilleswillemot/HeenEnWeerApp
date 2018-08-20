@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gilles.g_hw_sl_pv_9200.Fragments.DateSelectionFragment;
+import com.example.gilles.g_hw_sl_pv_9200.Fragments.DateSelectorFragment;
 import com.example.gilles.g_hw_sl_pv_9200.Fragments.Kosten_Datum_Selectie;
 import com.example.gilles.g_hw_sl_pv_9200.HTTPClient.RetrofitClient;
 import com.example.gilles.g_hw_sl_pv_9200.R;
@@ -57,13 +58,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class KostOverzichtScherm extends AppCompatActivity implements DateSelectionFragment.Actions {
+public class KostOverzichtScherm extends AppCompatActivity implements DateSelectorFragment.Actions {
     @BindView(R.id.textViewKostenHeader)
     TextView naam;
     @BindView(R.id.voegKostToeBtn)
     Button voegKostToeBtn;
-    @BindView(R.id.displaySettingsBtn)
-    Button showSortOptionsBtn;
+//    @BindView(R.id.displaySettingsBtn)
+//    Button showSortOptionsBtn;
     @BindView(R.id.listViewKosten)
     ListView kostenListView;
     @BindView(R.id.geenKostenMessage)
@@ -74,11 +75,14 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     private List<Kost> kosten;
     private String token;
     private String huidigGezinId;
-    private boolean filterOptionsAreHidden = true;
-    private Kosten_Datum_Selectie filterSettingsFragment;
+    //    private boolean filterOptionsAreHidden = true;
+//    private Kosten_Datum_Selectie filterSettingsFragment;
     private MyHashAdapter<Kost> myHashAdapter;
     private List<HashMap<String, String>> kostenLijst = new ArrayList<>();
-    private int[][] selectedDatesArray = {{0, 0, 0}, {0, 0, 0}};
+//    private int[][] selectedDatesArray = {{0, 0, 0}, {0, 0, 0}};
+
+    private Calendar calendar = Calendar.getInstance();
+    private ArrayList<String> years = new ArrayList<>();
 
     /**
      * Aanmaken van het kostoverzichtscherm en hierin gebeurt
@@ -90,16 +94,16 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kost_overzicht_scherm);
-
-        hideFilterOptions();
-
         ButterKnife.bind(this);
+
+        // hideFilterOptions();
+        // showSortOptionsBtn.setVisibility(View.GONE); // NOT FULLY IMPLEMENTED YET.
 
         // huidigGezinId ophalen uit local storage (sharedPreferences)
         SharedPreferences prefs = getSharedPreferences("myPref", MODE_PRIVATE);
         huidigGezinId = prefs.getString("huidigGezinId", "0");
         token = prefs.getString("token", "0");
-        initKostenAdapter(kosten);
+        initKostenAdapter();
 
         getKostenFromDatabase(huidigGezinId);
 
@@ -114,6 +118,8 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     private void gaNaarKostDetailScherm(Kost selectedCost) {
         Intent intent = new Intent(this, KostToevoegen.class);
         intent.putExtra("geselecteerdeKost", selectedCost);
+        intent.putExtra("FROM_ACTIVITY", "KostOverzichtScherm");
+
         startActivity(intent);
     }
 
@@ -132,16 +138,19 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
                         kosten = new Gson().fromJson(resp, listType);
 
                         if (kosten != null && !kosten.isEmpty()) {
+                            orderKostenByDescendingPurchasingDate();
                             // initiate adapter in order to show list of Kost objects in view.
+                            getYearOfOldestExpense(); // inits years
+                            getDateSelectorFragment().initYearSpinner(years);
 
                             //initKostenAdapter(kosten);
                             updateAdapterData(kosten);
 
                         } else { // list of costs is yet empty.
                             // hide listview (list of all cost objects)
-                            kostenListViewHeader.setVisibility(View.GONE);
-                            kostenListView.setVisibility(View.GONE);
-                            showSortOptionsBtn.setVisibility(View.GONE);
+                            kostenListViewHeader.setVisibility(View.INVISIBLE);
+                            kostenListView.setVisibility(View.INVISIBLE);
+//                            showSortOptionsBtn.setVisibility(View.GONE);
                             geenKostenMessage.setVisibility(View.VISIBLE);
                         }
                     }
@@ -158,35 +167,38 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     }
 
     private void orderKostenByDescendingPurchasingDate() {
-        List<Kost> orderedList = new ArrayList<>();
-        for (Kost kost : kosten) {
-
-        }
-        Collections.sort(kosten, this::compare);
-
+        Collections.sort(kosten, this::compareDescendingDate);
     }
 
-    public Kosten_Datum_Selectie getFilterSettingsFragment() {
-        if (filterSettingsFragment == null)
-            filterSettingsFragment = (Kosten_Datum_Selectie) getSupportFragmentManager()
-                    .findFragmentById(R.id.filterSettingsFragment);
-        return filterSettingsFragment;
+    public DateSelectorFragment getDateSelectorFragment() {
+//        if (dateSelectorFragment == null)
+        DateSelectorFragment dateSelectorFragment = (DateSelectorFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.dateSelector);
+        return dateSelectorFragment;
     }
 
-    private void initKostenAdapter(List<Kost> kosten) {
+    private void initKostenAdapter() {
 
 
         String[] from = {"Info", "Bedrag"};
         int[] to = new int[]{R.id.naamKost, R.id.bedragKost};
-        //  fillAdapterData(kosten);
 
         myHashAdapter = new MyHashAdapter(this, kostenLijst, R.layout.simplerow, from, to);
         kostenListView.setAdapter(myHashAdapter);
 
         kostenListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Kost selectedCost = this.kosten.get(position);
-            gaNaarKostDetailScherm(selectedCost);
+            Object[] test = kostenLijst.get(position).values().toArray();
+            // index 1, because Id comes after Info and before Bedrag alfabeticly
+
+            String kostId = test[1].toString();
+            Kost selectedCost = null;
+            for (Kost kost : this.kosten) {
+                if (kost.getId().equals(kostId))
+                    selectedCost = kost;
+            }
+            if (selectedCost != null)
+                gaNaarKostDetailScherm(selectedCost);
         });
     }
 
@@ -201,48 +213,37 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         myHashAdapter.notifyDataSetChanged();
     }
 
+    private void updateAdapterData(int maand, int year) {
+        kostenLijst.clear();
+
+        for (Kost kost : kosten) {
+            int kostMaand = kost.getPurchasingMonth();
+            int kostJaar = kost.getPurchasingYear();
+
+            if (kostMaand == maand && kostJaar == year) {
+                HashMap<String, String> hm = new HashMap<>();
+                hm.put("Info", kost.toString());
+                hm.put("Bedrag", kost.getBedragSpecial());
+                hm.put("Id", kost.getId());
+                kostenLijst.add(hm);
+            }
+        }
+        myHashAdapter.notifyDataSetChanged();
+    }
+
     private void fillAdapterData(List<Kost> list) {
         for (Kost kost : list) {
             HashMap<String, String> hm = new HashMap<>();
             hm.put("Info", kost.toString());
             hm.put("Bedrag", kost.getBedragSpecial());
+            hm.put("Id", kost.getId());
             kostenLijst.add(hm);
         }
     }
 
-    private void hideFilterOptions() {
-        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .hide(getFilterSettingsFragment())
-                .commit();
-    }
-
-    private void showFilterOptions() {
-        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .show(getFilterSettingsFragment())
-                .commit();
-    }
-
-    public void SortOptionsBtnClick(View v) {
-        if (filterOptionsAreHidden) {
-            showFilterOptions();
-            kostenListViewHeader.setVisibility(View.GONE);
-            kostenListView.setVisibility(View.GONE);
-            showSortOptionsBtn.setText("Sorteer Opties Verbergen");
-        } else {
-            hideFilterOptions();
-            kostenListViewHeader.setVisibility(View.VISIBLE);
-            kostenListView.setVisibility(View.VISIBLE);
-            showSortOptionsBtn.setText("Sorteer Opties");
-        }
-        filterOptionsAreHidden = !filterOptionsAreHidden;
-    }
-
     public void voegKostToe(View view) {
         Intent intent = new Intent(KostOverzichtScherm.this, KostToevoegen.class);
+        intent.putExtra("FROM_ACTIVITY", "KostOverzichtScherm");
         startActivity(intent);
     }
 
@@ -265,193 +266,27 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     }
 
     public int getYearOfOldestExpense() {
-        int beginYear = 2018; /* = getKosten().stream().min((kost1, kost2) ->
-               Double.compare(kost1.getPurchasingYear(), kost2.getPurchasingYear())).get().getPurchasingYear();*/
-        List<Kost> kosten = getKosten();
+        int beginYear = calendar.get(Calendar.YEAR);
+        List<Kost> kosten = this.kosten;
         if (kosten != null && !kosten.isEmpty()) {
             for (Kost kost : kosten) {
                 if (kost.getPurchasingYear() < beginYear) beginYear = kost.getPurchasingYear();
             }
         }
+        for (int i = calendar.get(Calendar.YEAR); i >= beginYear; i--) {
+            years.add(Integer.toString(i));
+        }
         return beginYear;
     }
 
-    private DateSelectionFragment getEndDateSelectorFragment() {
-        DateSelectionFragment childFrag = (DateSelectionFragment) getFilterSettingsFragment().
-                getChildFragmentManager().findFragmentById(R.id.endDateSelectionFragment);
-        return childFrag;
+    @Override
+    public void monthSpinnerOnClick(int month, int year) {
+        updateAdapterData(month, year);
     }
 
-    private DateSelectionFragment getStartDateSelectorFragment() {
-        DateSelectionFragment childFrag = (DateSelectionFragment) getFilterSettingsFragment().
-                getChildFragmentManager().findFragmentById(R.id.startDateSelectionFragment);
-        return childFrag;
-    }
-
-    private void filterKostenLijst() {
-        List<Kost> filteredKostenList = new ArrayList<>();
-        List<Kost> filteredKostenList2 = new ArrayList<>();
-        List<Kost> filteredKostenList3 = new ArrayList<>();
-
-        int startDay = selectedDatesArray[0][0];
-        int endDay = selectedDatesArray[1][0];
-
-        int startMonth = selectedDatesArray[0][1];
-        int endMonth = selectedDatesArray[1][1];
-
-        int startYear = selectedDatesArray[0][2];
-        int endYear = selectedDatesArray[1][2];
-
-        // eventueel beginnen met filteren op jaar => als default (=0) dan moet je enkel volledige kostenlijst teruggeven.
-
-        if (startDay > 0 && endDay > 0) { // if a specific day was selected in the filter, otherwise its default.
-            for (Kost kost : kosten) {
-                int purchasingDay = kost.getPurchasingDay();
-                if (purchasingDay >= startDay && purchasingDay <= endDay)
-                    filteredKostenList.add(kost);
-            }
-        } else filteredKostenList = kosten;
-
-        if (startMonth > 0 && endMonth > 0) { // if a specific month was selected in the filter, otherwise its default.
-            for (Kost kost : filteredKostenList) {
-                int purchasingMonth = kost.getPurchasingMonth();
-                if (purchasingMonth >= startMonth && purchasingMonth <= endMonth)
-                    filteredKostenList2.add(kost);
-            }
-        } else filteredKostenList2 = filteredKostenList;
-
-        if (startYear > 0 && startYear > 0) { // if a specific year was selected in the filter, otherwise its default.
-            for (Kost kost : filteredKostenList) {
-                int purchasingMonth = kost.getPurchasingYear();
-                if (purchasingMonth >= startYear && purchasingMonth <= endYear)
-                    filteredKostenList2.add(kost);
-            }
-        } else filteredKostenList3 = filteredKostenList2;
-
-        updateAdapterData(filteredKostenList3);
-    }
-
-    /**
-     *
-     */
-    public void daySpinnerOnClick(boolean isStartDateSpinner, int day) {
-        if (day == 0) {
-            selectedDatesArray[0][0] = 0;
-            selectedDatesArray[1][0] = 0;
-        } else if (isStartDateSpinner) {
-            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
-                    && selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
-                    && selectedDatesArray[1][0] < day) // if end-date is lower than start-date day.
-            {
-                getEndDateSelectorFragment().changeDateManually(day, 1);
-                selectedDatesArray[1][0] = day;
-            }
-            selectedDatesArray[0][0] = day;
-        } else // if day in end date selector changed
-        {
-            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
-                    && selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
-                    && selectedDatesArray[0][0] > day) // if start-date day is higher than end-date day.
-            {
-                getStartDateSelectorFragment().changeDateManually(day, 1);
-                selectedDatesArray[0][0] = day;
-            }
-            selectedDatesArray[1][0] = day;
-        }
-        filterKostenLijst();
-    }
-
-    public void monthSpinnerOnClick(boolean isStartDateSpinner, int month) {
-        if (month == 0) {
-            selectedDatesArray[0][1] = 0;
-            selectedDatesArray[1][1] = 0;
-        } else if (isStartDateSpinner) {
-            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
-                    && selectedDatesArray[1][1] < month) // end date month is lower than start date month
-            {
-                getEndDateSelectorFragment().changeDateManually(month, 2);
-                selectedDatesArray[1][1] = month;
-            }
-            if (
-                // equal month, but start day is bigger than end day
-                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
-                            selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
-                            && selectedDatesArray[1][0] < selectedDatesArray[0][0]) // smaller day
-            {
-                getEndDateSelectorFragment().changeDateManually(selectedDatesArray[0][0], 1);
-                selectedDatesArray[1][0] = selectedDatesArray[0][0];
-            }
-            selectedDatesArray[0][1] = month;
-        } else // if month in end date selector changed
-        {
-            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
-                    && selectedDatesArray[0][1] > month) {// start date month is higher / bigger than start date month
-                getStartDateSelectorFragment().changeDateManually(month, 2);
-                selectedDatesArray[0][1] = month;
-            }
-            if (
-                // equal month, but start day is bigger than end day
-                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
-                            selectedDatesArray[0][1] == selectedDatesArray[1][1] // same month
-                            && selectedDatesArray[0][0] > selectedDatesArray[1][0]) // bigger day
-            {
-                getStartDateSelectorFragment().changeDateManually(selectedDatesArray[1][0], 1);
-                selectedDatesArray[0][0] = selectedDatesArray[1][0];
-            }
-            selectedDatesArray[1][1] = month;
-        }
-        filterKostenLijst();
-    }
-
-    public void yearSpinnerOnClick(boolean isStartDateSpinner, int year) {
-        if (year == 0) {
-            selectedDatesArray[0][2] = 0;
-            selectedDatesArray[1][2] = 0;
-        } else if (isStartDateSpinner) {
-            if (selectedDatesArray[1][2] < year) { // if end date year is < new value of year
-                getEndDateSelectorFragment().changeDateManually(year, 3);
-                selectedDatesArray[1][2] = year;
-            }
-            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
-                    && selectedDatesArray[1][1] < selectedDatesArray[0][1]) // end date month is lower than start date month
-            {
-                getEndDateSelectorFragment().changeDateManually(selectedDatesArray[0][1], 2);
-                selectedDatesArray[1][1] = selectedDatesArray[0][1];
-            }
-            if (
-                // equal month, but start day is bigger than end day
-                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
-                            selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
-                            && selectedDatesArray[1][0] < selectedDatesArray[0][0]) // smaller day
-            {
-                getEndDateSelectorFragment().changeDateManually(selectedDatesArray[0][0], 1);
-                selectedDatesArray[1][0] = selectedDatesArray[0][0];
-            }
-            selectedDatesArray[0][2] = year;
-        } else // if month in end date selector changed
-        {
-            if (selectedDatesArray[0][2] > year) { // if start date year is > new value of year
-                getStartDateSelectorFragment().changeDateManually(year, 3);
-                selectedDatesArray[0][2] = year;
-            }
-            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
-                    && selectedDatesArray[0][1] > selectedDatesArray[1][1]) // start month is > end date month
-            {
-                getStartDateSelectorFragment().changeDateManually(selectedDatesArray[1][1], 2);
-                selectedDatesArray[0][1] = selectedDatesArray[1][1];
-            }
-            if (
-                // equal month, but start day is bigger than end day
-                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
-                            selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
-                            && selectedDatesArray[0][0] > selectedDatesArray[1][0]) // bigger day
-            {
-                getStartDateSelectorFragment().changeDateManually(selectedDatesArray[1][0], 1);
-                selectedDatesArray[0][0] = selectedDatesArray[1][0];
-            }
-            selectedDatesArray[1][2] = year;
-        }
-        filterKostenLijst();
+    @Override
+    public void yearSpinnerOnClick(int month, int year) {
+        updateAdapterData(month, year);
     }
 
     public class MyHashAdapter<String> extends SimpleAdapter {
@@ -527,27 +362,242 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         }
     }
 
-    //    static final Comparator<Kost> byDate = new Comparator<Kost>() {
-//        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
-//
-//        public int compare(Kost ord1, Kost ord2) {
-//            Date d1 = null;
-//            Date d2 = null;
-//            try {
-//
-//                d1 = sdf.parse(dateFormat.format(ord1.getAankoopDatum()));
-//                d2 = sdf.parse(dateFormat.format(ord2.getAankoopDatum()));
-//            } catch (Exception e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//
-//
-//            return (d1.getTime() > d2.getTime() ? -1 : 1);     //descending
-//            //  return (d1.getTime() > d2.getTime() ? 1 : -1);     //ascending
-//        }
-//    };
-    public int compare(Kost lhs, Kost rhs) {
+    public int compareDescendingDate(Kost lhs, Kost rhs) {
         return rhs.getAankoopDatum().compareTo(lhs.getAankoopDatum());
     }
+
+    public int compareAscendingDate(Kost lhs, Kost rhs) {
+        return lhs.getAankoopDatum().compareTo(rhs.getAankoopDatum());
+    }
+
+//    private void hideFilterOptions() {
+//        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+//        fm.beginTransaction()
+//                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+//                .hide(getFilterSettingsFragment())
+//                .commit();
+//        // TODO fragment has to come in foreground.
+//    }
+//    private void showFilterOptions() {
+//        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+//        fm.beginTransaction()
+//                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+//                .show(getFilterSettingsFragment())
+//                .commit();
+//    }
+
+//    public void SortOptionsBtnClick(View v) {
+//        if (filterOptionsAreHidden) {
+//            showFilterOptions();
+//            kostenListViewHeader.setVisibility(View.GONE);
+//            kostenListView.setVisibility(View.GONE);
+//            showSortOptionsBtn.setText("Sorteer Opties Verbergen");
+//        } else {
+//            hideFilterOptions();
+//            kostenListViewHeader.setVisibility(View.VISIBLE);
+//            kostenListView.setVisibility(View.VISIBLE);
+//            showSortOptionsBtn.setText("Sorteer Opties");
+//        }
+//        filterOptionsAreHidden = !filterOptionsAreHidden;
+//    }
+//    public void sorterenOp(String x) {
+//
+//    }
+//
+//    public void filterenOp(String x) {
+//        List<Kost> filteredCosts = new ArrayList<>();
+//        for (Kost kost : kosten) {
+//            //if(kost.)
+//        }
+//        // descending date
+//        Collections.sort(kosten, this::compareAscendingDate);
+//
+//        //ascending date
+//        //
+//        Collections.sort(kosten, this::compareAscendingDate);
+//
+//        updateAdapterData(filteredCosts);
+//    }
+//    private DateSelectionFragment getEndDateSelectorFragment() {
+//        DateSelectionFragment childFrag = (DateSelectionFragment) getFilterSettingsFragment().
+//                getChildFragmentManager().findFragmentById(R.id.endDateSelectionFragment);
+//        return childFrag;
+//    }
+//
+//    private DateSelectionFragment getStartDateSelectorFragment() {
+//        DateSelectionFragment childFrag = (DateSelectionFragment) getFilterSettingsFragment().
+//                getChildFragmentManager().findFragmentById(R.id.startDateSelectionFragment);
+//        return childFrag;
+//    }
+//    private void filterKostenLijst() {
+//        List<Kost> filteredKostenList = new ArrayList<>();
+//        List<Kost> filteredKostenList2 = new ArrayList<>();
+//        List<Kost> filteredKostenList3 = new ArrayList<>();
+//
+//        int startDay = selectedDatesArray[0][0];
+//        int endDay = selectedDatesArray[1][0];
+//
+//        int startMonth = selectedDatesArray[0][1];
+//        int endMonth = selectedDatesArray[1][1];
+//
+//        int startYear = selectedDatesArray[0][2];
+//        int endYear = selectedDatesArray[1][2];
+//
+//        // eventueel beginnen met filteren op jaar => als default (=0) dan moet je enkel volledige kostenlijst teruggeven.
+//
+//        if (startDay > 0 && endDay > 0) { // if a specific day was selected in the filter, otherwise its default.
+//            for (Kost kost : kosten) {
+//                int purchasingDay = kost.getPurchasingDay();
+//                if (purchasingDay >= startDay && purchasingDay <= endDay)
+//                    filteredKostenList.add(kost);
+//            }
+//        } else filteredKostenList = kosten;
+//
+//        if (startMonth > 0 && endMonth > 0) { // if a specific month was selected in the filter, otherwise its default.
+//            for (Kost kost : filteredKostenList) {
+//                int purchasingMonth = kost.getPurchasingMonth();
+//                if (purchasingMonth >= startMonth && purchasingMonth <= endMonth)
+//                    filteredKostenList2.add(kost);
+//            }
+//        } else filteredKostenList2 = filteredKostenList;
+//
+//        if (startYear > 0 && startYear > 0) { // if a specific year was selected in the filter, otherwise its default.
+//            for (Kost kost : filteredKostenList) {
+//                int purchasingMonth = kost.getPurchasingYear();
+//                if (purchasingMonth >= startYear && purchasingMonth <= endYear)
+//                    filteredKostenList2.add(kost);
+//            }
+//        } else filteredKostenList3 = filteredKostenList2;
+//
+//        updateAdapterData(filteredKostenList3);
+//    }
+//
+//    /**
+//     *
+//     */
+//    public void daySpinnerOnClick(boolean isStartDateSpinner, int day) {
+//        if (day == 0) {
+//            selectedDatesArray[0][0] = 0;
+//            selectedDatesArray[1][0] = 0;
+//        } else if (isStartDateSpinner) {
+//            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
+//                    && selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
+//                    && selectedDatesArray[1][0] < day) // if end-date is lower than start-date day.
+//            {
+//                getEndDateSelectorFragment().changeDateManually(day, 1);
+//                selectedDatesArray[1][0] = day;
+//            }
+//            selectedDatesArray[0][0] = day;
+//        } else // if day in end date selector changed
+//        {
+//            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
+//                    && selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
+//                    && selectedDatesArray[0][0] > day) // if start-date day is higher than end-date day.
+//            {
+//                getStartDateSelectorFragment().changeDateManually(day, 1);
+//                selectedDatesArray[0][0] = day;
+//            }
+//            selectedDatesArray[1][0] = day;
+//        }
+//        filterKostenLijst();
+//    }
+//
+//    public void monthSpinnerOnClick(boolean isStartDateSpinner, int month) {
+//        if (month == 0) {
+//            selectedDatesArray[0][1] = 0;
+//            selectedDatesArray[1][1] = 0;
+//        } else if (isStartDateSpinner) {
+//            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
+//                    && selectedDatesArray[1][1] < month) // end date month is lower than start date month
+//            {
+//                getEndDateSelectorFragment().changeDateManually(month, 2);
+//                selectedDatesArray[1][1] = month;
+//            }
+//            if (
+//                // equal month, but start day is bigger than end day
+//                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
+//                            selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
+//                            && selectedDatesArray[1][0] < selectedDatesArray[0][0]) // smaller day
+//            {
+//                getEndDateSelectorFragment().changeDateManually(selectedDatesArray[0][0], 1);
+//                selectedDatesArray[1][0] = selectedDatesArray[0][0];
+//            }
+//            selectedDatesArray[0][1] = month;
+//        } else // if month in end date selector changed
+//        {
+//            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
+//                    && selectedDatesArray[0][1] > month) {// start date month is higher / bigger than start date month
+//                getStartDateSelectorFragment().changeDateManually(month, 2);
+//                selectedDatesArray[0][1] = month;
+//            }
+//            if (
+//                // equal month, but start day is bigger than end day
+//                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
+//                            selectedDatesArray[0][1] == selectedDatesArray[1][1] // same month
+//                            && selectedDatesArray[0][0] > selectedDatesArray[1][0]) // bigger day
+//            {
+//                getStartDateSelectorFragment().changeDateManually(selectedDatesArray[1][0], 1);
+//                selectedDatesArray[0][0] = selectedDatesArray[1][0];
+//            }
+//            selectedDatesArray[1][1] = month;
+//        }
+//        filterKostenLijst();
+//    }
+//
+//    public void yearSpinnerOnClick(boolean isStartDateSpinner, int year) {
+//        if (year == 0) {
+//            selectedDatesArray[0][2] = 0;
+//            selectedDatesArray[1][2] = 0;
+//        } else if (isStartDateSpinner) {
+//            if (selectedDatesArray[1][2] < year) { // if end date year is < new value of year
+//                getEndDateSelectorFragment().changeDateManually(year, 3);
+//                selectedDatesArray[1][2] = year;
+//            }
+//            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
+//                    && selectedDatesArray[1][1] < selectedDatesArray[0][1]) // end date month is lower than start date month
+//            {
+//                getEndDateSelectorFragment().changeDateManually(selectedDatesArray[0][1], 2);
+//                selectedDatesArray[1][1] = selectedDatesArray[0][1];
+//            }
+//            if (
+//                // equal month, but start day is bigger than end day
+//                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
+//                            selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
+//                            && selectedDatesArray[1][0] < selectedDatesArray[0][0]) // smaller day
+//            {
+//                getEndDateSelectorFragment().changeDateManually(selectedDatesArray[0][0], 1);
+//                selectedDatesArray[1][0] = selectedDatesArray[0][0];
+//            }
+//            selectedDatesArray[0][2] = year;
+//        } else // if month in end date selector changed
+//        {
+//            if (selectedDatesArray[0][2] > year) { // if start date year is > new value of year
+//                getStartDateSelectorFragment().changeDateManually(year, 3);
+//                selectedDatesArray[0][2] = year;
+//            }
+//            if (selectedDatesArray[1][2] == selectedDatesArray[0][2] // same year
+//                    && selectedDatesArray[0][1] > selectedDatesArray[1][1]) // start month is > end date month
+//            {
+//                getStartDateSelectorFragment().changeDateManually(selectedDatesArray[1][1], 2);
+//                selectedDatesArray[0][1] = selectedDatesArray[1][1];
+//            }
+//            if (
+//                // equal month, but start day is bigger than end day
+//                    selectedDatesArray[1][2] == selectedDatesArray[0][2] && // same year
+//                            selectedDatesArray[1][1] == selectedDatesArray[0][1] // same month
+//                            && selectedDatesArray[0][0] > selectedDatesArray[1][0]) // bigger day
+//            {
+//                getStartDateSelectorFragment().changeDateManually(selectedDatesArray[1][0], 1);
+//                selectedDatesArray[0][0] = selectedDatesArray[1][0];
+//            }
+//            selectedDatesArray[1][2] = year;
+//        }
+//        filterKostenLijst();
+//    }
+//    public Kosten_Datum_Selectie getFilterSettingsFragment() {
+//        if (filterSettingsFragment == null)
+//            filterSettingsFragment = (Kosten_Datum_Selectie) getSupportFragmentManager()
+//                    .findFragmentById(R.id.filterSettingsFragment);
+//        return filterSettingsFragment;
+//    }
 }

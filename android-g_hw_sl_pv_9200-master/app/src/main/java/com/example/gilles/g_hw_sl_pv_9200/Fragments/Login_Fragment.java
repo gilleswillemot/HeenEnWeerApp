@@ -106,6 +106,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         editor.putString("token", loginObj.token);
         editor.putString("userId", loginObj.userId);
         editor.putString("huidigGezinId", loginObj.huidigGezinId);
+        editor.putString("username", loginObj.username);
         editor.apply();
     }
 
@@ -315,11 +316,13 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         public String token;
         public String userId;
         public String huidigGezinId;
+        public String username;
 
-        public LoginObject(String token, String userId, String huidigGezinId) {
+        public LoginObject(String token, String userId, String huidigGezinId, String username) {
             this.token = token;
             this.userId = userId;
             this.huidigGezinId = huidigGezinId;
+            this.username = username;
         }
     }
 

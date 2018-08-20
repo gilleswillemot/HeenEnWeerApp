@@ -31,7 +31,7 @@ public class Kost implements Parcelable {
      * @param categorie
      */
     public Kost(String naamKost, float bedrag, Date aankoopDatum, String aangekochtDoor, String gekochtVoor,
-                String beschrijving, String categorie, String kleur, boolean isUitzonderlijkeKost) {
+                String beschrijving, String categorie, String kleur, boolean isUitzonderlijkeKost, String status) {
         this.naamKost = naamKost;
         this.aangekochtDoor = aangekochtDoor;
         this.aangekochtVoor = gekochtVoor;
@@ -41,7 +41,7 @@ public class Kost implements Parcelable {
         this.categorie = categorie;
         this.kleur = kleur;
         this.isUitzonderlijkeKost = isUitzonderlijkeKost;
-        status = "onbepaald";
+        this.status = status;
     }
 
     protected Kost(Parcel in) {
