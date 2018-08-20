@@ -73,7 +73,7 @@ public class DateSelectorFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (monthFlag) {
                     int position2 = yearSpinner.getSelectedItemPosition();
-                    int year = position2 == 0 ? 0 :
+                    int year = position2 == 0 && withDefault ? 0 :
                             Integer.parseInt(years.get(position2));
                     mCallback.monthSpinnerOnClick(position, year);
                 } else monthFlag = !monthFlag;
@@ -101,7 +101,7 @@ public class DateSelectorFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (yearFlag) {
                     int month = monthSpinner.getSelectedItemPosition();
-                    int year = position == 0 ? 0 : Integer.parseInt(years.get(position));
+                    int year = position == 0 && withDefault ? 0 : Integer.parseInt(years.get(position));
                     mCallback.yearSpinnerOnClick(month, year);
                 } else yearFlag = !yearFlag;
             }
