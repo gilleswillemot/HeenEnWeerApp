@@ -37,9 +37,9 @@ public interface Api {
      @POST(api + "kost/{id}")
      Call<Kost> voegKostToe(/*@Header("Authorization") String token,*/
              @Path("id") String huidigGezinId, @Body Kost kost);
-     @DELETE(api + "kost/{id}")
+     @DELETE(api + "kost/{id}/{kostId}")
      Call<ResponseBody> verwijderKost(
-             @Path("id") String huidigGezinId, String kostId);
+             @Path("id") String huidigGezinId,  @Path("kostId") String kostId);
 
      @PUT(api + "kost/{id}")
      Call<Kost> wijzigKost(

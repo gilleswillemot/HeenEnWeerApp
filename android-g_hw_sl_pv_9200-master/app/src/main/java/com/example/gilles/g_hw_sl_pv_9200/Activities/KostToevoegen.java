@@ -130,6 +130,8 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
             getDateSelectionFragment().setSelectedDate(geselecteerdeKost.getAankoopDatum());
             uitzonderlijkeKostCheckBox.setChecked(geselecteerdeKost.isUitzonderlijkeKost());
 
+            btnKostVerwijderen.setVisibility(View.VISIBLE);
+
             initStatusSpinner(geselecteerdeKost.getStatus());
             if(username.equalsIgnoreCase(geselecteerdeKost.getAangekochtDoor())) {
                 statusSpinner.setEnabled(false);
@@ -233,7 +235,7 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
         });
     }
 
-    private void verwijderKost(View view) {
+    public void verwijderKost(View view) {
         // kost verwijderen via API call
         Call<ResponseBody> call = RetrofitClient.getInstance(this).getApi().verwijderKost(huidigGezinId, geselecteerdeKost.getId());
         call.enqueue(new Callback<ResponseBody>() {
