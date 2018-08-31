@@ -3,6 +3,9 @@ import { Artikel } from './artikel.model';
 import { ArtikelDataService } from './artikel-data.service';
 import { LoginObject } from '../user/loginObject.model';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../user/authentication.service';
+import { Observable } from 'rxjs/Observable';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-kennis-centrum',
@@ -12,21 +15,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class KennisCentrumComponent implements OnInit {
 
   private _articles: Artikel[];
-  private _isModerator: boolean;
   private _selectedArticle: Artikel;
   private _noArticles: boolean = false;
+  errorMsg: string;
 
-  constructor(private _artikelService: ArtikelDataService, private router: Router) { }
+  constructor(private _artikelService: ArtikelDataService, private router: Router, private _authenticationService:
+  AuthenticationService) { }
 
   ngOnInit() {
-    // controleren of gebruiker moderator is (om artikel te creëren)
-    const raw = JSON.parse(localStorage.getItem('currentUser'));
-    const user = new LoginObject(raw.id, raw.token, raw.gezinId, raw.isModerator);
-    this._isModerator = user.isModerator;
-
     // artikels ophalen
     this._artikelService.articles.subscribe(articles => {
-      console.log(articles);
       this._articles = articles;
       // eerste artikel selecteren en klaarzetten voor weergave
       if (this._articles.length != 0) {
@@ -40,8 +38,14 @@ export class KennisCentrumComponent implements OnInit {
 
   public deleteSelectedArticle(): void {
     console.log("deleting article with id: " + this._selectedArticle.id);
-    this._artikelService.removeArticle(this._selectedArticle).subscribe(removedArticle =>
-      delete this._selectedArticle);
+    this._artikelService.removeArticle(this._selectedArticle).subscribe(
+      item => (this._articles = this._articles.filter(val => item.id !== val.id),
+    this._selectedArticle = this.articles[0]),
+      (error: HttpErrorResponse) => {
+        this.errorMsg = `Error ${error.status} while removing article with title ${
+          this._selectedArticle.title }: ${error.error}`;
+      }
+    );
   }
 
   public articleToJson() {
@@ -74,7 +78,7 @@ export class KennisCentrumComponent implements OnInit {
     return this._articles;
   }
 
-  get isModerator() {
-    return this._isModerator;
+  get isModerator(): Observable<boolean> {
+   return this._authenticationService.isModerator$;
   }
 }

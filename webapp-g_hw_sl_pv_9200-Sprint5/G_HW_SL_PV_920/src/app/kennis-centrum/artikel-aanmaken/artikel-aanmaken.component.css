@@ -1,0 +1,7 @@
+#newArticle input, textarea{
+    font-size: 1em;
+}
+
+#newArticle label{
+    font-weight: bold;
+}

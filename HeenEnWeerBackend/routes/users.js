@@ -40,8 +40,8 @@ router.post('/login', function (req, res, next) {
     if(err){ return next(err); }
     if(gebruiker){
       console.log(gebruiker);
-      return res.json({ token: gebruiker.generateJWT(), userId: gebruiker._id, huidigGezinId: gebruiker.huidigGezinId, username: gebruiker.username, isModerator:
-      gebruiker.isModerator});
+      return res.json({ token: gebruiker.generateJWT(), userId: gebruiker._id, huidigGezinId: gebruiker.huidigGezinId,
+         username: gebruiker.username, isModerator: gebruiker.isModerator});
     } else {
       console.log(info);
       return res.status(401).json("Foutief wachtwoord of email.");

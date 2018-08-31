@@ -27,12 +27,10 @@ export class ArtikelAanmakenComponent implements OnInit {
   ngOnInit() {
     this.prepareFormGroup();
     let articleId;
-    console.log(articleId);
     this._route.queryParams.subscribe(params => {
       articleId = params['articleId'];
       this._editArticle = articleId ? true : false;
 
-      console.log(articleId);
       if (this._editArticle) {
         console.log("has param");
         //  this._articleToEdit = params['record'];
@@ -80,10 +78,11 @@ export class ArtikelAanmakenComponent implements OnInit {
     let text = this.newArticle.value.text;
     let source = this.newArticle.value.source;
 
-console.log(source);
+    let text2 = text.replace(/\n/g, "<br />");
+    console.log(text);
+    console.log(text2);
 
-    const article = new Artikel(title, text, new Date(), author, source);
-    console.log(article);
+    const article = new Artikel(title, text2, new Date(), author, source);
 
     if (this.editArticle) {
       this.artikelDataService

@@ -111,16 +111,11 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     }
 
     public void kostenAanvaarden(View v) {
-        List<Kost> aanvaardeKosten = new ArrayList<>();
         if (!kostenLijst.isEmpty()) {
             for (HashMap<String, String> hm : kostenLijst) {
-                for (Kost kost : kosten) {
-                    if (hm.values().toArray()[1].equals(kost.getId())) {
-                        kost.setStatus("goedgekeurd");
-                        editCost(kost);
-                    }
-                    aanvaardeKosten.add(kost);
-                }
+                Kost kost = kosten.get(Integer.parseInt(hm.values().toArray()[1].toString()));
+                kost.setStatus("goedgekeurd");
+                editCost(kost);
             }
         }
         Toast.makeText(KostOverzichtScherm.this, "Kosten zijn aanvaard.", Toast.LENGTH_LONG).show();
@@ -217,15 +212,10 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
 
         kostenListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Object[] test = kostenLijst.get(position).values().toArray();
+            int index = Integer.parseInt(kostenLijst.get(position).values().toArray()[1].toString());
             // index 1, because Id comes after Info and before Bedrag alfabeticly
 
-            String kostId = test[1].toString();
-            Kost selectedCost = null;
-            for (Kost kost : this.kosten) {
-                if (kost.getId().equals(kostId))
-                    selectedCost = kost;
-            }
+            Kost selectedCost = kosten.get(index);
             if (selectedCost != null)
                 gaNaarKostDetailScherm(selectedCost);
         });
@@ -246,12 +236,13 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         month = month - 1; // index 0 equals default value, so january starts at index 1
         kostenLijst.clear();
 
+        int teller = 0;
         for (Kost kost : kosten) {
             boolean addKost = false;
             int kostMaand = kost.getPurchasingMonth();
             int kostJaar = kost.getPurchasingYear();
 
-            if(month == -1 && year == 0) addKost = true;
+            if (month == -1 && year == 0) addKost = true;
             if (month == -1) {
                 if (year == kostJaar) addKost = true;
             } else if (year == 0) {
@@ -259,12 +250,9 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
             } else if (kostMaand == month && kostJaar == year) addKost = true;
 
             if (addKost) {
-                HashMap<String, String> hm = new HashMap<>();
-                hm.put("Info", kost.toString());
-                hm.put("Bedrag", kost.getBedragSpecial());
-                hm.put("Id", kost.getId());
-                kostenLijst.add(hm);
+                kostenLijst.add(makeKostHashMap(kost, teller));
             }
+            teller++;
         }
         myHashAdapter.notifyDataSetChanged();
 
@@ -274,13 +262,19 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     }
 
     private void fillAdapterData(List<Kost> list) {
+        int teller = 0;
         for (Kost kost : list) {
-            HashMap<String, String> hm = new HashMap<>();
-            hm.put("Info", kost.toString());
-            hm.put("Bedrag", kost.getBedragSpecial());
-            hm.put("Id", kost.getId());
-            kostenLijst.add(hm);
+            kostenLijst.add(makeKostHashMap(kost, teller++));
         }
+    }
+
+    private HashMap<String, String> makeKostHashMap(Kost kost, int index) {
+        HashMap<java.lang.String, java.lang.String> hm = new HashMap<>();
+        hm.put("Info", kost.toString());
+        hm.put("Bedrag", kost.getBedragSpecial());
+        hm.put("Id", kost.getId());
+        hm.put("Index", String.valueOf(index));
+        return hm;
     }
 
     public void voegKostToe(View view) {
@@ -340,13 +334,12 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = super.getView(position, convertView, parent);
-            Kost viewKost = null; //kost die wordt weergegeven op deze itemview.
+            Kost viewKost; //kost die wordt weergegeven op deze itemview.
 
 
-            java.lang.String kostId = kostenLijst.get(position).values().toArray()[1].toString();
-            for (Kost kost : kosten) {
-                if(kost.getId().equalsIgnoreCase(kostId)) viewKost = kost;
-            }
+            java.lang.String index = kostenLijst.get(position).values().toArray()[1].toString();
+            viewKost = kosten.get(Integer.parseInt(index));
+
             TextView naamKost = v.findViewById(R.id.naamKost);
 
 //            if(kost.isUitzonderlijkeKost()){

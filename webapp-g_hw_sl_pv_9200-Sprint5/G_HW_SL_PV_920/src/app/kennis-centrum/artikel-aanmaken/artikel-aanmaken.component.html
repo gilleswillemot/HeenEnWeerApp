@@ -1,4 +1,4 @@
-<form class="mt-5" [formGroup]='newArticle' (ngSubmit)='onSubmit()'>
+<form class="mt-5" [formGroup]='newArticle' (ngSubmit)='onSubmit()' id="newArticle">
   <!--*ngIf="ready"-->
   <div class="form-group row">
     <div class="col-3 offset-2">
@@ -49,17 +49,17 @@
   <div class="mt-5 row">
     <div class="col-4 offset-4">
       <button type='submit' [disabled]='!newArticle.valid' class="btn btn-primary offset-4">
-        <span *ngIf="!editArticle">
+        <span *ngIf="!editArticle" style="font-size: 1.2em">
           <i class="fa fa-plus"></i>
           Artikel aanmaken
         </span>
-        <span *ngIf="editArticle">
+        <span *ngIf="editArticle" style="font-size: 1.2em">
           <i class="fa fa-edit"></i>
           Wijzigingen doorvoeren
         </span>
 
       </button>
-      <button type="button" class="btn btn-default" (click)="_location.back();">annuleer</button>
+      <button type="button" class="btn btn-default" (click)="_location.back();" style="font-size: 0.8em">annuleer</button>
     </div>
   </div>
 </form>

@@ -22,7 +22,11 @@ require('./config/passport');
 //username = rec_user, password = projecten3db    database twowaydb staat op het mlab account van Piet Laureyns
 //mongoose.connect('mongodb://rec_user:projecten3db@ds135946.mlab.com:35946/twowaydb',{
   mongoose.Promise = global.Promise;
-  mongoose.connect('mongodb://2way:hogent1@ds115592.mlab.com:15592/twowaydb', {
+  mongoose.connect(
+      "mongodb://localhost:27017/twowaydb"
+
+   // 'mongodb://2way:hogent1@ds115592.mlab.com:15592/twowaydb'
+    , {
   useMongoClient: true
 });
 

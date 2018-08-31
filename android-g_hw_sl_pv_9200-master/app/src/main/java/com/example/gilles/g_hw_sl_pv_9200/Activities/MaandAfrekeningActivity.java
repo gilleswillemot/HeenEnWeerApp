@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -43,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MaandAfrekeningActivity extends AppCompatActivity implements DateSelectorFragment.Actions{
+public class MaandAfrekeningActivity extends AppCompatActivity implements DateSelectorFragment.Actions {
 
     @BindView(R.id.listViewKosten)
     ListView kostenListView;
@@ -97,21 +98,18 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
         int[] to = new int[]{R.id.naamKost, R.id.bedragKost};
 
         kostenAdapter = new SimpleAdapter(this, kostenLijst, R.layout.simplerow, from, to);
+        kostenAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         kostenListView.setAdapter(kostenAdapter);
         updateAdapterData(thisMonth, thisYear); // toon maandafrekening van deze maand.
 
         kostenListView.setOnItemClickListener((parent, view, position, id) ->
         {
-            Object[] test  = kostenLijst.get(position).values().toArray();
+            int index = Integer.parseInt(kostenLijst.get(position).values().toArray()[1].toString());
             // 2nd index, because Id comes after Info and before Bedrag alfabeticly
-            String kostId = test[1].toString();
-            Kost selectedCost = null;
-            for (Kost kost : this.kosten){
-                if(kost.getId().equals(kostId))
-                    selectedCost = kost;
-            }
-
-            gaNaarKostDetailScherm(selectedCost);
+            Kost selectedCost = kosten.get(index);
+            if (selectedCost != null)
+                gaNaarKostDetailScherm(selectedCost);
         });
     }
 
@@ -128,6 +126,7 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
 
         float kostenSom = 0;
         int aantalKosten = 0;
+        int teller = 0;
         for (Kost kost : kosten) {
             int kostMaand = kost.getPurchasingMonth();
             int kostJaar = kost.getPurchasingYear();
@@ -140,15 +139,18 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
                 hm.put("Info", kost.toString());
                 hm.put("Bedrag", kost.getBedragSpecial());
                 hm.put("Id", kost.getId());
+                hm.put("Index", String.valueOf(teller));
                 kostenLijst.add(hm);
             }
+            teller++;
         }
-        aantalKostenTextView.setText("Totaal aantal kosten: " + String.valueOf(aantalKosten));
-        totaleKostTextView.setText("Totaalsom van alle kosten: " + String.valueOf(kostenSom / 2));
 
+        String sourceString1 = "Aantal kosten: <b>" + String.valueOf(aantalKosten) + "</b>";
+        aantalKostenTextView.setText(Html.fromHtml(sourceString1));
+        String sourceString = "Totale kosten: <b>" + String.valueOf(kostenSom / 2) + "</b>";
+        totaleKostTextView.setText(Html.fromHtml(sourceString));
         kostenAdapter.notifyDataSetChanged();
     }
-
 
 
     @Override
@@ -228,8 +230,8 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
 
     public DateSelectorFragment getDateSelectorFragment() {
 //        if (dateSelectorFragment == null)
-     DateSelectorFragment dateSelectorFragment = (DateSelectorFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.dateSelector);
+        DateSelectorFragment dateSelectorFragment = (DateSelectorFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.dateSelector);
         return dateSelectorFragment;
     }
 

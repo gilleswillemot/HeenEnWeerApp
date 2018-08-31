@@ -15,10 +15,8 @@ export class AuthGuardService implements CanActivate {
     console.log(stateUrl);
     if (stateUrl === "/artikelAanmaken") {
       console.log("user wants to go to route \"artikelAanmaken\"");
-      const raw = JSON.parse(localStorage.getItem('currentUser'));
-      const user = new LoginObject(raw.id, raw.token, raw.gezinId, raw.isModerator);
-      let isMod = user.isModerator;
-      if (this.authService.user$.getValue() && isMod) {
+      console.log(this.authService.isModerator$.getValue());
+      if (this.authService.user$.getValue() && this.authService.isModerator$.getValue()) {
         console.log("permission granted");
         return true;
       }

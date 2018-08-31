@@ -12,14 +12,25 @@ export class AuthenticationService {
   private _user$: BehaviorSubject<string>;
   private _gezinId$: BehaviorSubject<string>;
   private _username$: BehaviorSubject<string>;
+  private _isAdmin$: BehaviorSubject<boolean>;
 
   public redirectUrl: string;
 
   constructor(private http: Http, private router: Router) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this._user$ = new BehaviorSubject<string>(currentUser && currentUser.id);
-    this._gezinId$ = new BehaviorSubject<string>(currentUser.gezinId);
-    this._username$ = new BehaviorSubject<string>(currentUser.username);
+    // console.log(localStorage.getItem('currentUser'));
+    // let done = false;
+    // while (!done)
+    //   try {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this._user$ = new BehaviorSubject<string>(currentUser && currentUser.id);
+        this._gezinId$ = new BehaviorSubject<string>(currentUser.gezinId);
+        this._username$ = new BehaviorSubject<string>(currentUser.username);
+        this._isAdmin$ = new BehaviorSubject<boolean>(currentUser.isModerator);
+      //   done = true;
+      // } catch (e) {
+      //   // alert(e); // error in the above string (in this case, yes)!
+      //   localStorage.setItem('currentUser', "{}");
+      // }
   }
 
   get user$(): BehaviorSubject<string> {
@@ -34,6 +45,10 @@ export class AuthenticationService {
     return this._gezinId$;
   }
 
+  get isModerator$(): BehaviorSubject<boolean> {
+    return this._isAdmin$;
+  }
+
   get token(): string {
     return JSON.parse(localStorage.getItem('currentUser')).token;
   }
@@ -43,13 +58,16 @@ export class AuthenticationService {
       .map(res => res.json()).map(res => {
         const token = res.token;
         if (token) {
-          // console.log(res);
-          localStorage.setItem('currentUser', JSON.stringify({ id: res.userId, token: token, gezinId: res.huidigGezinId,
-          username: res.username, isModerator: res.isModerator }));
+          console.log(res);
+          localStorage.setItem('currentUser', JSON.stringify({
+            id: res.userId, token: token, gezinId: res.huidigGezinId,
+            username: res.username, isModerator: res.isModerator
+          }));
           this._user$.next(res.userId);
           this._gezinId$.next(res.huidigGezinId);
           this._username$.next(res.username);
-
+          this._isAdmin$.next(res.isModerator);
+          console.log(this._isAdmin$);
           return true;
         } else {
           return false;
@@ -63,12 +81,13 @@ export class AuthenticationService {
       setTimeout(() => this._user$.next(null));
       setTimeout(() => this._gezinId$.next(null));
       setTimeout(() => this._username$.next(null));
+      setTimeout(() => this._isAdmin$.next(null));
       this.router.navigate(['/homepage']);
     }
   }
 
   register(email: string, password: string, voornaam: string, familienaam: string): Observable<boolean> {
-    return this.http.post(`${this._url}/registreer`, { username: email, password: password, voornaam:voornaam, familienaam: familienaam })
+    return this.http.post(`${this._url}/registreer`, { username: email, password: password, voornaam: voornaam, familienaam: familienaam })
       .map(res => res.json()).map(res => {
         const token = res.token;
         if (token) {
@@ -84,7 +103,7 @@ export class AuthenticationService {
   }
 
   checkEmailAvailability(email: string): Observable<boolean> {
-    return this.http.post(`/API/users/checkemail`, { email:email }).map(res => res.json())
+    return this.http.post(`/API/users/checkemail`, { email: email }).map(res => res.json())
       .map(item => {
         if (item.email === 'emailAlreadyExists') {
           return false;

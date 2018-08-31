@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/textViewKostenHeader"
         android:layout_width="327dp"
-        android:layout_height="29dp"
+        android:layout_height="35dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
@@ -66,6 +66,7 @@
 
     <TextView
         android:id="@+id/aantalKostenTextView"
+        android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -81,6 +82,7 @@
 
     <TextView
         android:id="@+id/totaleKostTextView"
+        android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -89,7 +91,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:text="Totale kostsom:"
+        android:text="Totale kosten:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.793"
