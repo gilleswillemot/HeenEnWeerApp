@@ -15,8 +15,6 @@ router.post('/registreer', function(req, res, next){
       return res.status(400).json(
         {message: 'Geen gebruikersnaam of passwoord ingegeven'});
     }
-  console.log(req.body.username + " - " + req.body.password);
-
   var gebruiker = new Gebruiker();
   gebruiker.username = req.body.username;
   gebruiker.voornaam = req.body.voornaam;
@@ -30,7 +28,6 @@ router.post('/registreer', function(req, res, next){
 
 //Authentication - login
 router.post('/login', function (req, res, next) {
-  console.log(req.body);
   if (!req.body.username || !req.body.password) {
       return res.status(400).json(
         {message: 'Gelieve alle velden in te vullen.'});

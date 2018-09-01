@@ -17,20 +17,11 @@ export class AuthenticationService {
   public redirectUrl: string;
 
   constructor(private http: Http, private router: Router) {
-    // console.log(localStorage.getItem('currentUser'));
-    // let done = false;
-    // while (!done)
-    //   try {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this._user$ = new BehaviorSubject<string>(currentUser && currentUser.id);
         this._gezinId$ = new BehaviorSubject<string>(currentUser.gezinId);
         this._username$ = new BehaviorSubject<string>(currentUser.username);
         this._isAdmin$ = new BehaviorSubject<boolean>(currentUser.isModerator);
-      //   done = true;
-      // } catch (e) {
-      //   // alert(e); // error in the above string (in this case, yes)!
-      //   localStorage.setItem('currentUser', "{}");
-      // }
   }
 
   get user$(): BehaviorSubject<string> {
