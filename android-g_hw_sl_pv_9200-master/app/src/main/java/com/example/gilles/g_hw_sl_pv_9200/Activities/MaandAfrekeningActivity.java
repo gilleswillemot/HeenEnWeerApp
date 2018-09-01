@@ -11,6 +11,7 @@ import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -23,6 +24,7 @@ import com.example.gilles.g_hw_sl_pv_9200.Fragments.Kosten_Datum_Selectie;
 import com.example.gilles.g_hw_sl_pv_9200.HTTPClient.RetrofitClient;
 import com.example.gilles.g_hw_sl_pv_9200.Models.Kost;
 import com.example.gilles.g_hw_sl_pv_9200.R;
+import com.example.gilles.g_hw_sl_pv_9200.SharedClasses.MyHashAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,6 +48,8 @@ import retrofit2.Response;
 
 public class MaandAfrekeningActivity extends AppCompatActivity implements DateSelectorFragment.Actions {
 
+    @BindView(R.id.geenKostenMessage)
+    TextView geenKostenMessage;
     @BindView(R.id.listViewKosten)
     ListView kostenListView;
     @BindView(R.id.totaleKostTextView)
@@ -59,7 +63,7 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
 
     private List<Kost> kosten; // alle kosten van het gezin
     private List<HashMap<String, String>> kostenLijst = new ArrayList<>(); // weergegeven kosten.
-    private SimpleAdapter kostenAdapter;
+    private MyHashAdapter<Kost> kostenAdapter;
     private Calendar calendar = Calendar.getInstance();
     private ArrayList<String> years = new ArrayList<>();
 
@@ -71,23 +75,11 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
         setContentView(R.layout.activity_maand_afrekening);
         ButterKnife.bind(this);
 
-//        boolean[] hiddenSelectors = {true, false, false}; // hide daySpinner
-//        DateSelectionFragment frag = getDateSelectionFragment();
-//        frag.hideSelectors(hiddenSelectors);
-//        frag.setSelectedDate(new Date()); // set dateSelector on month & year of today.
-
-//        kosten = getIntent().getParcelableArrayListExtra("kosten");
-
         SharedPreferences prefs = getSharedPreferences("myPref", MODE_PRIVATE);
         huidigGezinId = prefs.getString("huidigGezinId", "0");
 
         getKostenFromDatabase(huidigGezinId);
     }
-
-//    public DateSelectionFragment getDateSelectionFragment() {
-//        return (DateSelectionFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.dateSelector);
-//    }
 
     public void initKostenListViewAdapter() {
         int thisMonth = Calendar.getInstance().get(Calendar.MONTH);
@@ -97,7 +89,8 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
         String[] from = {"Info", "Bedrag"};
         int[] to = new int[]{R.id.naamKost, R.id.bedragKost};
 
-        kostenAdapter = new SimpleAdapter(this, kostenLijst, R.layout.simplerow, from, to);
+        kostenAdapter = new MyHashAdapter<>(this, kostenLijst, R.layout.simplerow, from, to,
+                false);
         kostenAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         kostenListView.setAdapter(kostenAdapter);
@@ -149,7 +142,18 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
         aantalKostenTextView.setText(Html.fromHtml(sourceString1));
         String sourceString = "Totale kosten: <b>" + String.valueOf(kostenSom / 2) + "</b>";
         totaleKostTextView.setText(Html.fromHtml(sourceString));
-        kostenAdapter.notifyDataSetChanged();
+
+        int visibility;
+        if (kostenLijst.isEmpty()){
+            geenKostenMessage.setVisibility(View.VISIBLE);
+            visibility = View.INVISIBLE;
+        }
+        else{
+            kostenAdapter.notifyDataSetChanged();
+            geenKostenMessage.setVisibility(View.INVISIBLE);
+            visibility = View.VISIBLE;
+        }
+        kostenListView.setVisibility(visibility);
     }
 
 
@@ -229,7 +233,6 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
     }
 
     public DateSelectorFragment getDateSelectorFragment() {
-//        if (dateSelectorFragment == null)
         DateSelectorFragment dateSelectorFragment = (DateSelectorFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.dateSelector);
         return dateSelectorFragment;
@@ -243,4 +246,7 @@ public class MaandAfrekeningActivity extends AppCompatActivity implements DateSe
         return rhs.getAankoopDatum().compareTo(lhs.getAankoopDatum());
     }
 
+    public List<Kost> getKosten() {
+        return kosten;
+    }
 }

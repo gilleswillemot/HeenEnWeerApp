@@ -46,7 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class KostToevoegen extends AppCompatActivity implements DateSelectionFragment.Actions {
+public class KostToevoegen extends AppCompatActivity {
     @BindView(R.id.bedragTextField)
     EditText bedrag;
     @BindView(R.id.naamKostTextField)
@@ -84,7 +84,7 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
     private String[] statuses = {"onbepaald" , "goedgekeurd", "afgekeurd"};
 
     private List<String> buyers = new ArrayList<>();
-    private List<String> involvedPersons = new ArrayList<>(Arrays.asList("Kinderen", "Iedereen"));
+    private List<String> involvedPersons = new ArrayList<>(Arrays.asList("Iedereen"));
 
     private Kost geselecteerdeKost;
 
@@ -150,22 +150,6 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(adapter);
         statusSpinner.setSelection(Arrays.asList(statuses).indexOf(status));
-
-//        statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//                if (statusFlag && username.equalsIgnoreCase(geselecteerdeKost.getAangekochtDoor())){
-//                    Toast.makeText(KostToevoegen.this,
-//                            "De koper van deze kost kan de status niet veranderen."
-//                            , Toast.LENGTH_LONG).show();
-//                } else statusFlag = !statusFlag;
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parentView) {
-//                return;
-//            }
-//        });
     }
 
     private void getGezinsLedenFromDatabase() {
@@ -281,7 +265,6 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
                     }
                 }
             }
-            //String[] betrokkenPersonen = new String[2];
             Date aankoopDatum = getDateSelectionFragment().getSelectedDate();
             String aangekochtDoor = buyerSpinner.getSelectedItem().toString();
             String aangekochtVoor = involvedPersSpinner.getSelectedItem().toString();
@@ -321,11 +304,13 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
     }
 
     private void initInvolvedPersonSpinner() {
-
+        int counter = 0;
         for (User user : gezinsLeden) {
+            if(!user.isOuder()) counter++;
             String voornaam = user.getVoornaam();
             involvedPersons.add(voornaam);
         }
+        if (counter > 1) involvedPersons.add(1,"kinderen"); // als er meerdere kinderen zijn.
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 involvedPersons);
@@ -334,7 +319,6 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
     }
 
     private void initColorPickerSpinner() {
-        //setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
         List<String> spinnerArray = new ArrayList<>();
         for (String color : colors) {
             spinnerArray.add(color);
@@ -342,7 +326,6 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
 
         MyAdapter<String> adapter = new MyAdapter<>(this, android.R.layout.simple_spinner_item,
                 spinnerArray);
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         colorSpinner.setAdapter(adapter);
     }
 
@@ -368,30 +351,6 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
             intent = new Intent(KostToevoegen.this, MaandAfrekeningActivity.class);
         }
         startActivity(intent);
-    }
-
-    @Override
-    public int getYearOfOldestExpense() {
-        if (geselecteerdeKost != null) {
-            int year = geselecteerdeKost.getPurchasingYear();
-            return year;
-        } else
-            return Calendar.getInstance().get(Calendar.YEAR);
-    }
-
-    @Override
-    public void daySpinnerOnClick(boolean isStartDateSelector, int day) {
-
-    }
-
-    @Override
-    public void monthSpinnerOnClick(boolean isStartDateSelector, int month) {
-
-    }
-
-    @Override
-    public void yearSpinnerOnClick(boolean isStartDateSelector, int year) {
-
     }
 
     public class MyAdapter<String> extends ArrayAdapter<String> {
@@ -452,39 +411,4 @@ public class KostToevoegen extends AppCompatActivity implements DateSelectionFra
             return c;
         }
     }
-
-//    private int getPositionOfColor(String color) {
-//        int pos;
-//
-//        switch (color.toLowerCase()) {
-//            case "rood":
-//                pos = 0;
-//                break;
-//            case "blauw":
-//                pos = 1;
-//                break;
-//            case "geel":
-//                pos = 2;
-//                break;
-//            case "groen":
-//                pos = 3;
-//                break;
-//            case "wit":
-//                pos = 4;
-//                break;
-//            case "cyaan":
-//                pos = 5;
-//                break;
-//            case "grijs":
-//                pos = 6;
-//                break;
-//            case "paars":
-//                pos = 7;
-//                break;
-//
-//            default:
-//                pos = 0;
-//        }
-//        return pos;
-//    }
 }

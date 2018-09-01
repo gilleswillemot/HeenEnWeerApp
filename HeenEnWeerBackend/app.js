@@ -38,7 +38,6 @@ var activiteit = require('./routes/activiteit');
 var kost = require('./routes/kost');
 var gesprek = require('./routes/gesprek');
 var artikel = require('./routes/artikel');
-let cors = require('cors');
 
 var app = express();
 

@@ -23,19 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--<fragment-->
-    <!--android:id="@+id/dateSelector"-->
-    <!--android:name="com.example.gilles.g_hw_sl_pv_9200.Fragments.DateSelectionFragment"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginEnd="8dp"-->
-    <!--android:layout_marginLeft="8dp"-->
-    <!--android:layout_marginRight="8dp"-->
-    <!--android:layout_marginStart="8dp"-->
-    <!--android:layout_marginTop="12dp"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/textViewKostenHeader" />-->
     <fragment
         android:id="@+id/dateSelector"
         android:name="com.example.gilles.g_hw_sl_pv_9200.Fragments.DateSelectorFragment"
@@ -50,6 +37,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewKostenHeader" />
 
+    <TextView
+        android:id="@+id/geenKostenMessage"
+        android:layout_width="343dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="112dp"
+        android:gravity="center"
+        android:text="Er zijn geen kosten teruggevonden voor de geselecteerde maand."
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateSelector" />
+
     <ListView
         android:id="@+id/listViewKosten"
         android:layout_width="360dp"
@@ -63,10 +66,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateSelector" />
 
-
     <TextView
         android:id="@+id/aantalKostenTextView"
-        android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -75,6 +76,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:text="# kosten: "
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listViewKosten"
@@ -82,7 +84,6 @@
 
     <TextView
         android:id="@+id/totaleKostTextView"
-        android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -92,6 +93,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:text="Totale kosten:"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.793"
