@@ -79,6 +79,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
     private List<Kost> kosten = new ArrayList<>();
     private String token;
     private String huidigGezinId;
+    private String username;
     private MyHashAdapter<Kost> myHashAdapter;
     private List<HashMap<String, String>> kostenLijst = new ArrayList<>();
 
@@ -100,6 +101,7 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         // huidigGezinId ophalen uit local storage (sharedPreferences)
         SharedPreferences prefs = getSharedPreferences("myPref", MODE_PRIVATE);
         huidigGezinId = prefs.getString("huidigGezinId", "0");
+        username = prefs.getString("username", "0");
         token = prefs.getString("token", "0");
         initKostenAdapter();
 
@@ -110,8 +112,10 @@ public class KostOverzichtScherm extends AppCompatActivity implements DateSelect
         if (!kostenLijst.isEmpty()) {
             for (HashMap<String, String> hm : kostenLijst) {
                 Kost kost = kosten.get(Integer.parseInt(hm.values().toArray()[1].toString()));
+               if (!kost.getAangekochtDoor().equalsIgnoreCase(username)){
                 kost.setStatus("goedgekeurd");
                 editCost(kost);
+               }
             }
         }
         Toast.makeText(KostOverzichtScherm.this, "Kosten zijn aanvaard.", Toast.LENGTH_LONG).show();

@@ -61,7 +61,7 @@ public class DateSelectorFragment extends Fragment {
         }
         ArrayAdapter<String> mAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, maanden);
-
+        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         monthSpinner.setAdapter(mAdapter);
         if (withDefault)
             monthSpinner.setSelection(0);
@@ -90,6 +90,8 @@ public class DateSelectorFragment extends Fragment {
         this.years = years;
         ArrayAdapter<String> yAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, years);
+        yAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         yearSpinner.setAdapter(yAdapter);
 
         if(withDefault){
