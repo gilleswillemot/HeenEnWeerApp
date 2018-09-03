@@ -18,7 +18,6 @@ export class AuthenticationService {
 
   constructor(private http: Http, private router: Router) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        console.log(currentUser);
         this._user$ = new BehaviorSubject<string>(currentUser && currentUser.id);
         this._gezinId$ = new BehaviorSubject<string>(currentUser && currentUser.gezinId);
         this._username$ = new BehaviorSubject<string>(currentUser && currentUser.username);

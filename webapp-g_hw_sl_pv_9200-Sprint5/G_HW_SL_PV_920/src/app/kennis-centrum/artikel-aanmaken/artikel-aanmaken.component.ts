@@ -38,10 +38,11 @@ export class ArtikelAanmakenComponent implements OnInit {
         this.artikelDataService.getArticle(articleId).subscribe(
           article => {
             this._articleToEdit = article;
+            let text = this._articleToEdit.text.replace(/<br \/>/g, "\n");
 
             this.newArticle.patchValue({
               title: article.title ? this._articleToEdit.title : "",
-              text: article.text ? this._articleToEdit.text : "",
+              text: article.text ? text : "",
               author: article.author ? this._articleToEdit.author : "",
               source: article.source ? this._articleToEdit.source : ""
             });
