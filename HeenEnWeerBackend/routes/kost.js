@@ -82,7 +82,7 @@ router.post('/:gezinId', auth, function (req, res, next) {
 });
 
 /*DELETE Kost*/
-router.delete('/:gezinId/:kostId', function (req, res, next) {
+router.delete('/:gezinId/:kostId', auth, function (req, res, next) {
   console.log(req.gezin);
   req.gezin.kosten.pop(req.kost);
   Gezin.update({ _id: req.gezin._id }, req.gezin, function (err, gezin) {
@@ -101,7 +101,7 @@ router.delete('/:gezinId/:kostId', function (req, res, next) {
 });
 
 /*Wijzig Kost*/
-router.put('/:kostId',/* auth,*/ function (req, res, next) {
+router.put('/:kostId', auth, function (req, res, next) {
   console.log(req.body);
 
   Kost.findByIdAndUpdate(req.params.kostId, req.body, function (err, post) { //methode kan zonder param kostId, die zit al in body.

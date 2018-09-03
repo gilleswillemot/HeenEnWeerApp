@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Artikel } from './artikel.model';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
+import { Headers } from '@angular/http';
+import { AuthenticationService } from '../user/authentication.service';
 
 @Injectable()
 export class ArtikelDataService {
 
   private readonly _appUrl = '/API/artikel/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private auth: AuthenticationService) {}
 
   get articles(): Observable<Artikel[]> {
     return this.http
@@ -24,31 +26,28 @@ export class ArtikelDataService {
   }
 
   createArticle(article: Artikel): Observable<Artikel> {
+    let headers = this.createAuthorizationHeader();
     return this.http
-      .post(`${this._appUrl}`, article)
+      .post(`${this._appUrl}`, article, { headers })
       .pipe(map(Artikel.fromJSON));
   }
 
   removeArticle(rec: Artikel): Observable<Artikel> {
-    console.log("in remove article in artikelDataService, rec id: " + rec.id);
+    let headers = this.createAuthorizationHeader();
     return this.http
-      .delete(`${this._appUrl}${rec.id}`)
+      .delete(`${this._appUrl}${rec.id}`, { headers })
       .pipe(map(Artikel.fromJSON));
   }
 
   editArticle(articleId: String, rec: Artikel): Observable<Artikel> {
-    return this.http.put(`${this._appUrl}${articleId}`, rec)
+    let headers = this.createAuthorizationHeader();
+    return this.http.put(`${this._appUrl}${articleId}`, rec, { headers })
     .pipe(map(Artikel.fromJSON));
   }
 
-  // addTextToArticle(text: String, rec: Artikel): Observable<Artikel> {
-  //   const theUrl = `${this._appUrl}/article/${rec.id}/text`;
-  //   return this.http.post(theUrl, text).pipe(map(Artikel.fromJSON));
-  // }
-
-  // getArticle(id: string): Observable<Artikel> {
-  //   return this.http
-  //     .get(`${this._appUrl}/article/${id}`)
-  //     .pipe(map(Artikel.fromJSON));
-  // }
+  createAuthorizationHeader(): HttpHeaders{
+    let headers = new HttpHeaders().set('Content-Type', 'application/json')
+    .set('authorization', 'Bearer ' + this.auth.token);
+    return headers;
+  }
 }

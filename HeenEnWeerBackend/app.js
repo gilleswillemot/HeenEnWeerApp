@@ -23,8 +23,8 @@ require('./config/passport');
 //mongoose.connect('mongodb://rec_user:projecten3db@ds135946.mlab.com:35946/twowaydb',{
   mongoose.Promise = global.Promise;
   mongoose.connect(
-      // "mongodb://localhost:27017/twowaydb"
-   'mongodb://2way:hogent1@ds115592.mlab.com:15592/twowaydb'
+    "mongodb://localhost:27017/twowaydb"
+  //  'mongodb://2way:hogent1@ds115592.mlab.com:15592/twowaydb'
     , {
   useMongoClient: true
 });
@@ -41,8 +41,8 @@ var artikel = require('./routes/artikel');
 var app = express();
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

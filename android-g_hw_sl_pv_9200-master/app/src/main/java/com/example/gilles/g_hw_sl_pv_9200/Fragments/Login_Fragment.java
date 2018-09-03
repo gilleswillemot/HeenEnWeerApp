@@ -80,12 +80,6 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         initViews();
         setListeners();
 
-        // auto login for development reasons.
-        emailid.setText("gilles");
-
-        password.setText("testtesttest");
-       // checkValidation();
-
         return view;
     }
 

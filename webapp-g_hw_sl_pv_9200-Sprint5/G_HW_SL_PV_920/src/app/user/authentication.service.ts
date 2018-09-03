@@ -18,10 +18,11 @@ export class AuthenticationService {
 
   constructor(private http: Http, private router: Router) {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        console.log(currentUser);
         this._user$ = new BehaviorSubject<string>(currentUser && currentUser.id);
-        this._gezinId$ = new BehaviorSubject<string>(currentUser.gezinId);
-        this._username$ = new BehaviorSubject<string>(currentUser.username);
-        this._isAdmin$ = new BehaviorSubject<boolean>(currentUser.isModerator);
+        this._gezinId$ = new BehaviorSubject<string>(currentUser && currentUser.gezinId);
+        this._username$ = new BehaviorSubject<string>(currentUser && currentUser.username);
+        this._isAdmin$ = new BehaviorSubject<boolean>(currentUser && currentUser.isModerator);
   }
 
   get user$(): BehaviorSubject<string> {

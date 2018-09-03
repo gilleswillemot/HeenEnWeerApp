@@ -61,7 +61,6 @@ router.param('artikelId', function (req, res, next, id) {
 /*GET artikelen*/
 router.get('/', function (req, res, next) {
   Artikel.find(function (err, rec) {
-    console.log(rec);
     res.json(rec);
 
   });
@@ -73,8 +72,7 @@ router.get('/:artikelId', function (req, res, next) {
 });
 
 /*POST nieuw artikel toevoegen aan gezin*/
-router.post('/', function (req, res, next) {
-  console.log(req.body);
+router.post('/', auth, function (req, res, next) {
   let artikel = new Artikel(req.body);
 
   Artikel.create(artikel, function (err, artkl) {
@@ -84,7 +82,7 @@ router.post('/', function (req, res, next) {
 });
 
 /*DELETE Artikel*/
-router.delete('/:artikelId', function (req, res, next) {
+router.delete('/:artikelId', auth, function (req, res, next) {
   req.artikel.remove({ _id: req.params.artikelId }, function (err, rec) {
     if (err) return next(err);
     res.json(rec);
@@ -92,8 +90,7 @@ router.delete('/:artikelId', function (req, res, next) {
 });
 
 /*Wijzig Artikel*/
-router.put('/:artikelId', function (req, res, next) {
-  console.log(req.body);
+router.put('/:artikelId', auth, function (req, res, next) {
   Artikel.findByIdAndUpdate(req.params.artikelId, req.body, function (err, rec) {
     if (err) return next(err);
     res.json(rec);
